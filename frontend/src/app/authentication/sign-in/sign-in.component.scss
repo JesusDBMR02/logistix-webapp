@@ -1,0 +1,79 @@
+/* src/app/authentication/sign-in/sign-in.component.scss */
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%; /* Ajusta según el tamaño deseado */
+  overflow: hidden;
+}
+
+.container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('../../../assets/istockphoto-1484852942-612x612.jpg');
+  background-size: cover;
+  background-position: center;
+  filter: blur(10px); /* Aplica el blur solo al fondo */
+  z-index: 1; /* Asegura que esté detrás del contenido */
+}
+/* Estilo general para el formulario */
+.sign-in-container {
+    width: 500px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90%;
+    position:relative;
+    z-index: 2;
+  }
+  
+  .sign-in-form {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  h1 {
+    text-align: center;
+    color: #3f51b5;
+    margin-bottom: 20px;
+  }
+  
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 20px;
+  
+    /* Estilo personalizado para los campos */
+    .mat-form-field-infix {
+      background-color: #f1f1f1;
+      border-radius: 4px;
+    }
+  }
+  
+  .buttons-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  .login-social-btn{
+    margin-top: 15px;
+  }
+  /* Estilo para el enlace de '¿Olvidaste la contraseña?' */
+  .forgot-password-link {
+    text-align: center;
+    display: block;
+    margin-top: 15px;
+    color: #3f51b5;
+    cursor: pointer;
+  
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  

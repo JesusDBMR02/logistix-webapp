@@ -1,0 +1,25 @@
+.footer {
+    position: relative;
+    width: 100%;
+    background-color: #ffffff;
+    color: #555;
+    text-align: center;
+    padding: 10px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    p {
+      font-size: 14px;
+    }
+    z-index: 2;
+}
+mat-card{
+  float: left;
+  margin: 10px;
+  width: 32%;
+  justify-content: center;
+}
+#cards{
+  display: flex;
+}
+.cb{
+  clear: both;
+}
