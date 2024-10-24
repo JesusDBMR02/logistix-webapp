@@ -9,10 +9,16 @@ import { MaterialModule } from './shared/material.module';
 import { HomeComponent } from './home/home.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { NavbarSignComponent } from './shared/navbar-sign/navbar-sign.component';
+import { environment } from 'src/enviroment/enviroment';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ForgotPasswordComponent } from './authentication/forgot-password/forgot-password.component';
 @NgModule({
   declarations: [
     AppComponent,
     SignInComponent,
+    ForgotPasswordComponent,
     HomeComponent,
     FooterComponent,
     NavbarSignComponent
@@ -22,6 +28,9 @@ import { NavbarSignComponent } from './shared/navbar-sign/navbar-sign.component'
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireAuthModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
