@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -14,6 +13,11 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ForgotPasswordComponent } from './authentication/forgot-password/forgot-password.component';
+import { SignUpComponent } from './authentication/sign-up/sign-up.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ConfirmEmailComponent } from './authentication/confirm-email/confirm-email.component';
+import { ConfirmationService } from 'primeng/api';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -21,7 +25,9 @@ import { ForgotPasswordComponent } from './authentication/forgot-password/forgot
     ForgotPasswordComponent,
     HomeComponent,
     FooterComponent,
-    NavbarSignComponent
+    NavbarSignComponent,
+    SignUpComponent,
+    ConfirmEmailComponent
   ],
   imports: [
     BrowserModule,
@@ -30,9 +36,11 @@ import { ForgotPasswordComponent } from './authentication/forgot-password/forgot
     MaterialModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule,
+
   ],
-  providers: [],
+  providers: [ConfirmationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

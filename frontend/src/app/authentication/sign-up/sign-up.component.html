@@ -1,0 +1,138 @@
+<div class="container h-screen flex align-content-center justify-content-center">
+    <div *ngIf="loading" class="flex align-items-center spinner-overlay z-5">
+        <p-progressSpinner ariaLabel="loading" />
+    </div>
+    <p-card header="Sign-Up" class="flex align-items-center" [style]="{ width: '500px' }">
+        <form class="sign-up-form" [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
+            <p-stepper [linear]="true">
+                <p-stepperPanel header="Acount">
+                    <ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
+                        <div class="flex flex-column">
+                            <div class="mb-4">
+                            <p-floatLabel>
+                                <input pInputText type="text" formControlName="name" required class="w-full" id="name" />
+                                <label for="name">Enter your name</label>
+                            </p-floatLabel>
+                        </div>
+                        <div class="mb-4">
+                            <p-floatLabel>
+                                <input pInputText type="text" formControlName="lastName" required class="w-full" id="lastName" />
+                                <label for="lastName">Enter your last name</label>
+                            </p-floatLabel>
+                        </div>
+                        <div class="mb-3">
+                            <p-floatLabel>
+                                <input pInputText type="email" formControlName="email" required class="w-full" id="email" />
+                                <label for="email">Enter your email</label>
+                            </p-floatLabel>
+                        </div>
+                        <div class="mb-3 w-full">
+                            <p-password type="password" formControlName="password" required [toggleMask]="true"
+                                placeholder="Enter your password">
+                                <ng-template pTemplate="footer">
+                                    <p-divider />
+                                    <p class="mt-2">Suggestions</p>
+                                    <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
+                                        <li>At least one lowercase</li>
+                                        <li>At least one uppercase</li>
+                                        <li>At least one numeric</li>
+                                        <li>At least one symbol</li>
+                                        <li>Minimum 8 characters</li>
+                                    </ul>
+                                </ng-template>
+                            </p-password>
+                        </div>
+                        <div class=" w-full">
+                            <p-password type="password" formControlName="confirmPassword" required [toggleMask]="true"
+                                placeholder="Confirm your password">
+                            </p-password>
+
+                        </div>
+                        </div>
+                        <div class="flex pt-4 justify-content-end">
+                            <p-button label="Next" icon="pi pi-arrow-right" iconPos="right" (onClick)="nextCallback.emit()" />
+                        </div>
+                    </ng-template>
+                </p-stepperPanel>
+                <p-stepperPanel header="Company">
+                    <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback" let-index="index">
+                        <div class="flex flex-column">
+                            <div class="mb-4">
+                            <p-floatLabel>
+                                <input pInputText type="text" formControlName="company" required class="w-full" id="company" />
+                                <label for="company">Enter your company</label>
+                            </p-floatLabel>
+                        </div>
+                        <div class="mb-4">
+                            <p-floatLabel>
+                                <input pInputText type="text" formControlName="address" required class="w-full" id="address" />
+                                <label for="address">Enter your address</label>
+                            </p-floatLabel>
+                        </div>
+                        <div class="mb-4 w-full">
+                            <p-floatLabel class="w-full">
+                              <p-inputMask
+                                mask="(999) 999-999-999"
+                                formControlName="phone"
+                                placeholder="Enter your Phone Number"
+                                [class]="{ 'w-full': true }" 
+                                id="phone" />
+                              <label for="phone">Enter your phone number</label>
+                            </p-floatLabel>
+                          </div>
+                          
+                        </div>
+                        <div class="flex pt-4 justify-content-between">
+                            <p-button label="Back" icon="pi pi-arrow-left" (onClick)="prevCallback.emit()" />
+                            <p-button label="Next" icon="pi pi-arrow-right" iconPos="right" (onClick)="nextCallback.emit()" />
+                        </div>
+                    </ng-template>
+                </p-stepperPanel>
+                <p-stepperPanel header="Register">
+                    <ng-template pTemplate="content" let-prevCallback="prevCallback" let-index="index">
+                        <div class="flex align-content-center flex-column h-12rem">
+                            <div class="flex justify-content-between align-items-center">
+                            <p-button type="submit" label="Sign-Up" icon="pi pi-sign-in" class="p-button-primary"
+                                [disabled]="signUpForm.invalid" [raised]="true" />
+                            <p-button label="Sign-In" icon="pi pi-user" (onClick)="navigateToSignIn()" [raised]="true"
+                                severity="secondary" />
+                        </div>
+                        </div>
+                        <div class="flex pt-4 justify-content-start">
+                            <p-button label="Back" icon="pi pi-arrow-left" (onClick)="prevCallback.emit()" />
+                        </div>
+                    </ng-template>
+                </p-stepperPanel>
+            </p-stepper>
+        </form>
+    </p-card>
+    <p-toast />
+    <p-confirmDialog #cd>
+        <ng-template pTemplate="headless" let-message>
+            <div class="flex flex-column align-items-center p-5 surface-overlay border-round">
+                <div class="border-circle bg-primary inline-flex justify-content-center align-items-center h-6rem w-6rem">
+                    <i class="pi pi-question text-5xl"></i>
+                </div>
+                <span class="font-bold text-2xl block mb-2 mt-4">
+                    {{ message.header }}
+                </span>
+                <p class="mb-0">{{ message.message }}</p>
+                <div class="flex align-items-center gap-2 mt-4">
+                    <button 
+                        pButton 
+                        label="Save" 
+                        (click)="cd.accept()" 
+                        class="w-8rem">
+                    </button>
+                    <button 
+                        pButton 
+                        label="Cancel" 
+                        (click)="cd.reject()" 
+                        class="p-button-outlined w-8rem ">
+                    </button>
+                </div>
+            </div>
+        </ng-template>
+    </p-confirmDialog>
+</div>
+

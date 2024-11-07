@@ -1,19 +1,23 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/services/auth.service';
+import { MessageService } from 'primeng/api'; 
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-forgot-password',
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss',
+  providers: [MessageService], 
 })
 export class ForgotPasswordComponent {
   emailForm: FormGroup;
+  loading:boolean = false;
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
-    private snackBar: MatSnackBar
+    private messageService: MessageService ,
+    private router : Router
   ) {
     this.emailForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -21,42 +25,42 @@ export class ForgotPasswordComponent {
   }
   onSubmit() {
     if (this.emailForm.invalid) {
-      this.openSnackBar('Please, complete the email', 'Cerrar', 'warn');
+      this.showToast('warn', 'Please, complete the email');
       return;
     }
     const { email } = this.emailForm.value;
+    this.loading = true;
     this.sendPasswordResetEmail(email);
   }
   sendPasswordResetEmail(email: string): void {
     this.authService
       .sendPasswordResetEmail(email)
       .then(() => {
-        this.openSnackBar(
-          'An email with a reset link has been sent to ' +
+        this.showToast('success','An email with a reset link has been sent to ' +
             { email } +
-            '. Please check your inbox.',
-          'Cerrar',
-          'primary'
-        );
+            '. Please check your inbox.',);
       })
       .catch((error) => {
-        this.openSnackBar(
-          'Error sending password recovery email: ' + error.message,
-          'Cerrar',
-          'accent'
-        );
+        this.showToast('error', 'Error sending password recovery email: ' + error.message);
+      })
+      .finally(() => {
+        this.loading = false;
       });
   }
-  openSnackBar(
-    message: string,
-    action: string,
-    color: 'warn' | 'accent' | 'primary'
-  ): void {
-    this.snackBar.open(message, action, {
-      duration: 3000,
-      verticalPosition: 'top',
-      horizontalPosition: 'right',
-      panelClass: [],
+  navigateToSignIn(){
+    this.loading = true;
+    setTimeout(() => {
+      this.router.navigate(['/sign-in']);
+      this.loading = false;
+    },150);
+  }
+  showToast(severity: 'success' | 'info' | 'warn' | 'error', detail: string): void {
+    this.messageService.add({
+      severity: severity,
+      summary: severity === 'warn' ? 'Advertencia' : severity === 'error' ? 'Error' : 'Información',
+      detail: detail,
+      life: 3000,
     });
   }
+  
 }
