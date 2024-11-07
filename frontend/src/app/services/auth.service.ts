@@ -1,33 +1,49 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import firebase from 'firebase/compat/app';
+import { FacebookAuthProvider, GoogleAuthProvider } from 'firebase/auth';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(private afAuth: AngularFireAuth) { }
-
-  signInWithGoogle() {
-    return this.afAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  constructor(public auth: AngularFireAuth) {
+   
   }
+  signInWithGoogle() {
+    return this.auth.signInWithPopup(new GoogleAuthProvider());
+  }
+
   signInWithFacebook() {
-    return this.afAuth.signInWithPopup(new firebase.auth.FacebookAuthProvider());
+    return this.auth.signInWithPopup(new FacebookAuthProvider());
   }
 
   signInWithEmailAndPassword(email: string, password: string) {
-    return this.afAuth.signInWithEmailAndPassword(email, password);
+    return this.auth.signInWithEmailAndPassword(email, password);
   }
 
-  signUpWithEmail(email: string, password: string) {
-    return this.afAuth.createUserWithEmailAndPassword(email, password);
+  signUpWithEmailAndPassword(email: string, password: string) {
+    return this.auth.createUserWithEmailAndPassword(email, password);
   }
 
   logout() {
-    return this.afAuth.signOut();
-  }
-  sendPasswordResetEmail(email:string){
-    return this.afAuth.sendPasswordResetEmail(email);
+    return this.auth.signOut();
   }
 
+  sendPasswordResetEmail(email: string) {
+    return this.auth.sendPasswordResetEmail(email);
+  }
+
+  async sendEmailVerification() {
+    const user = await this.auth.currentUser;
+    if (!user?.emailVerified) {
+      try {
+        await user?.sendEmailVerification();
+      } catch (error) {
+        console.error("Error enviando el correo de verificación:", error);
+        throw error;
+      }
+    } else {
+      console.warn("No hay un usuario autenticado para enviar el correo de verificación.");
+    }
+  }
 }

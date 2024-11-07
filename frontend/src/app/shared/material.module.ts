@@ -1,25 +1,30 @@
 import { NgModule } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatInputModule } from '@angular/material/input';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {MatSidenavModule } from '@angular/material/sidenav';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-
+import { ToolbarModule } from 'primeng/toolbar';
+import { CardModule } from 'primeng/card';
+import { PasswordModule } from 'primeng/password';
+import { InputTextModule } from 'primeng/inputtext';
+import { ToastModule } from 'primeng/toast';
+import { ButtonModule } from 'primeng/button';
+import { DividerModule } from 'primeng/divider';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { StepperModule } from 'primeng/stepper';
+import { InputMaskModule } from 'primeng/inputmask';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 @NgModule({
   exports: [
-    MatButtonModule,
-    MatToolbarModule,
-    MatInputModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    MatSidenavModule,
-    MatSnackBarModule
-  ]
+    ToolbarModule,
+    CardModule,
+    PasswordModule,
+    InputTextModule,
+    ToastModule,
+    ButtonModule,
+    DividerModule,
+    FloatLabelModule,
+    StepperModule,
+    InputMaskModule,
+    ConfirmDialogModule,
+    ProgressSpinnerModule
+    ]
 })
 export class MaterialModule {}

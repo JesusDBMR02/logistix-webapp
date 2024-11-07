@@ -1,21 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MessageService } from 'primeng/api'; 
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-sign-in',
   templateUrl: './sign-in.component.html',
   styleUrls: ['./sign-in.component.scss'],
+  providers: [MessageService], 
 })
 export class SignInComponent implements OnInit {
   signInForm: FormGroup;
-  hide: boolean = true;
+  loading:boolean = false;
 
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
-    private snackBar: MatSnackBar
+    private messageService: MessageService,
+    private router:Router
   ) {
     this.signInForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -34,94 +38,73 @@ export class SignInComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  togglePasswordVisibility(event: MouseEvent): void {
-    event.stopPropagation();
-    console.log('Hola');
-    this.hide = !this.hide;
-  }
-
   onSubmit(): void {
     if (this.signInForm.invalid) {
-      this.openSnackBar(
-        'Por favor, complete todos los campos correctamente.',
-        'Cerrar',
-        'warn'
-      );
+      this.showToast('warn', 'Por favor, complete todos los campos correctamente.');
       return;
     }
 
     const { email, password } = this.signInForm.value;
+    this.loading = true;
     this.signInWithEmailPassword(email, password);
   }
 
-  signInWithEmailPassword(email: string, password: string): void {
+  signInWithEmailPassword(email: string, password: string) {
     this.authService
       .signInWithEmailAndPassword(email, password)
       .then((res) => {
-        console.log('Logged in with email', res);
-        this.openSnackBar('Inicio de sesión exitoso.', 'Cerrar', 'primary');
+        this.showToast('success', 'Inicio de sesión exitoso.');
+        this.navigateToLogisticHome();
       })
       .catch((err) => {
-        console.error('Error logging in with email', err);
-        this.openSnackBar(
-          'Error al iniciar sesión: ' + err.message,
-          'Cerrar',
-          'accent'
-        );
+        this.showToast('error', 'Error al iniciar sesión: ' + err.message);
       });
   }
 
   signInWithGoogle() {
     this.authService
       .signInWithGoogle()
-      .then((response) => {
-        console.log(response);
-        this.openSnackBar(
-          'Inicio de sesión con Google con exito.',
-          'Cerrar',
-          'primary'
-        );
+      .then((res) => {
+        this.showToast('success', 'Inicio de sesión con Google con éxito.');
+        this.navigateToLogisticHome();
       })
       .catch((error) => {
-        console.log(error);
-        this.openSnackBar(
-          'Error al iniciar sesión con Google: ' + error.message,
-          'Cerrar',
-          'accent'
-        );
+        this.showToast('error', 'Error al iniciar sesión con Google: ' + error.message);
       });
+  }
+  navigateToLogisticHome(){
+    this.loading = true;
+    setTimeout(() => {
+        this.router.navigate(['/logistic-home']);
+        this.loading = false;
+    },150)
+  }
+  navigateToSignUp(){
+    this.loading = true;
+    setTimeout(() => {
+        this.router.navigate(['/sign-up']);
+        this.loading = false;
+    },150)
   }
   signInWithFacebook() {
     this.authService
       .signInWithFacebook()
-      .then((response) => {
-        console.log(response);
-        this.openSnackBar(
-          'Inicio de sesión con Facebook con exito.',
-          'Cerrar',
-          'primary'
-        );
+      .then((res) => {
+        this.showToast('success', 'Inicio de sesión con Facebook con éxito.');
+        this.navigateToLogisticHome();
       })
       .catch((error) => {
-        console.log(error);
-        this.openSnackBar(
-          'Error al iniciar sesión con Facebook: ' + error.message,
-          'Cerrar',
-          'accent'
-        );
+        this.showToast('error', 'Error al iniciar sesión con Facebook: ' + error.message);
       });
   }
 
-  openSnackBar(
-    message: string,
-    action: string,
-    color: 'warn' | 'accent' | 'primary'
-  ): void {
-    this.snackBar.open(message, action, {
-      duration: 3000,
-      verticalPosition: 'top',
-      horizontalPosition: 'right',
-      panelClass: [],
+  showToast(severity: 'success' | 'info' | 'warn' | 'error', detail: string): void {
+    this.messageService.add({
+      severity: severity,
+      summary: severity === 'warn' ? 'Advertencia' : severity === 'error' ? 'Error' : 'Información',
+      detail: detail,
+      life: 3000,
     });
   }
 }
+
