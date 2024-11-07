@@ -1,0 +1,91 @@
+<div class="container">
+  <div class="sign-in-container">
+    <form class="sign-in-form" [formGroup]="signInForm" (ngSubmit)="onSubmit()">
+      <h1><i class="fa fa-sign-in" aria-hidden="true"></i> &nbsp;Sign-In</h1>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          type="email"
+          name="email"
+          placeholder="Email"
+          formControlName="email"
+          required
+        />
+        <mat-error *ngIf="signInForm.get('email')!.hasError('required')">
+          El email es obligatorio.
+        </mat-error>
+        <mat-error *ngIf="signInForm.get('email')!.hasError('email')">
+          El email no es válido.
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          [type]="hide ? 'password' : 'text'"
+          name="password"
+          placeholder="Password"
+          formControlName="password"
+          required
+        />
+        <a
+          mat-icon-button
+          matSuffix
+          (click)="togglePasswordVisibility($event)"
+          [attr.aria-label]="hide ? 'Mostrar contraseña' : 'Ocultar contraseña'"
+        >
+          <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+        </a>
+        <mat-error *ngIf="signInForm.get('password')!.hasError('required')">
+          La contraseña es obligatoria.
+        </mat-error>
+        <mat-error *ngIf="signInForm.get('password')!.hasError('minlength')">
+          La contraseña debe tener al menos 8 caracteres.
+        </mat-error>
+        <mat-error *ngIf="signInForm.get('password')!.hasError('pattern')">
+          La contraseña debe contener al menos una mayúscula, una minúscula, un
+          número y un carácter especial.
+        </mat-error>
+      </mat-form-field>
+
+      <div class="buttons-container">
+        <button
+          mat-raised-button
+          type="submit"
+          color="primary"
+          class="login-btn"
+          [disabled]="signInForm.invalid"
+        >
+          <i class="fa fa-sign-in" aria-hidden="true"></i> &nbsp;Sign-In
+        </button>
+        <button mat-raised-button color="secundary" routerLink="/sign-up">
+          <i class="fa fa-user-circle" aria-hidden="true"></i>&nbsp; Sign-Up
+        </button>
+      </div>
+      <a class="forgot-password-link" routerLink="/forgot-password"
+        >Forgot Password?</a
+      >
+      <button
+        mat-raised-button
+        color="accent"
+        class="login-social-btn"
+        style="width: 100%"
+      >
+        <mat-icon svgIcon="google" class="icon"></mat-icon
+        ><i class="fa-brands fa-google"></i>&nbsp; Sign in with Google
+      </button>
+
+      <button
+        mat-raised-button
+        color="primary"
+        class="login-social-btn"
+        style="width: 100%"
+      >
+        <mat-icon svgIcon="facebook" class="icon"></mat-icon
+        ><i class="fa-brands fa-facebook"></i>&nbsp; Sign in with Facebook
+      </button>
+    </form>
+  </div>
+</div>

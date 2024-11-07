@@ -1,0 +1,20 @@
+.navbar {
+    mat-toolbar {
+      background-color: #3f51b5;
+      color: white;
+  
+      .spacer {
+        flex: 1 1 auto;
+      }
+  
+      button {
+        color: white;
+        margin-left: 10px;
+        font-size: 14px;
+  
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+      }
+    }
+}
