@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { MessageService } from 'primeng/api'; 
 import { Router } from '@angular/router';
+import { SessionService } from 'src/app/services/session.service';
 
 
 @Component({
@@ -19,7 +20,8 @@ export class SignInComponent implements OnInit {
     private authService: AuthService,
     private fb: FormBuilder,
     private messageService: MessageService,
-    private router:Router
+    private router:Router,
+    private sessionService: SessionService
   ) {
     this.signInForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -52,8 +54,9 @@ export class SignInComponent implements OnInit {
   signInWithEmailPassword(email: string, password: string) {
     this.authService
       .signInWithEmailAndPassword(email, password)
-      .then((res) => {
+      .then((token) => {
         this.showToast('success', 'Inicio de sesión exitoso.');
+        this.sessionService.saveDataSession(token);
         this.navigateToLogisticHome();
       })
       .catch((err) => {
@@ -64,8 +67,9 @@ export class SignInComponent implements OnInit {
   signInWithGoogle() {
     this.authService
       .signInWithGoogle()
-      .then((res) => {
+      .then((token) => {
         this.showToast('success', 'Inicio de sesión con Google con éxito.');
+        this.sessionService.saveDataSession(token);
         this.navigateToLogisticHome();
       })
       .catch((error) => {
@@ -89,8 +93,9 @@ export class SignInComponent implements OnInit {
   signInWithFacebook() {
     this.authService
       .signInWithFacebook()
-      .then((res) => {
+      .then((token) => {
         this.showToast('success', 'Inicio de sesión con Facebook con éxito.');
+        this.sessionService.saveDataSession(token);
         this.navigateToLogisticHome();
       })
       .catch((error) => {
