@@ -10,15 +10,24 @@ export class AuthService {
    
   }
   signInWithGoogle() {
-    return this.auth.signInWithPopup(new GoogleAuthProvider());
+    return this.auth.signInWithPopup(new GoogleAuthProvider()).then(async (result) => {
+      const token = await result.user?.getIdToken() ??"";
+      return token;
+    });
   }
 
   signInWithFacebook() {
-    return this.auth.signInWithPopup(new FacebookAuthProvider());
+    return this.auth.signInWithPopup(new FacebookAuthProvider()).then(async (result) => {
+      const token = await result.user?.getIdToken() ??"";
+      return token;
+    });
   }
 
   signInWithEmailAndPassword(email: string, password: string) {
-    return this.auth.signInWithEmailAndPassword(email, password);
+    return this.auth.signInWithEmailAndPassword(email, password).then(async (result) => {
+      const token = await result.user?.getIdToken() ??"";
+      return token;
+    });
   }
 
   signUpWithEmailAndPassword(email: string, password: string) {
