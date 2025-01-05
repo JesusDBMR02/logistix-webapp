@@ -16,7 +16,16 @@ const getAllCategories = async (req, res) => {
         res.status(500).json({ message: 'Error al obtener las categorías.', error });
     }
 };
-
+const getCategoryById = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const category = await db.findOne({ _id: new ObjectId(id) })
+        res.status(200).json(category);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al obtener la categoría', error });
+    }
+};
 const createCategory = async (req, res) => {
     const { name, description } = req.body;   
     try {
@@ -71,5 +80,5 @@ const deleteCategory = async (req, res) => {
     }
 };
 
-module.exports = { setDb, getAllCategories, createCategory, updateCategory, deleteCategory };
+module.exports = { setDb, getAllCategories, getCategoryById, createCategory, updateCategory, deleteCategory };
 

@@ -79,7 +79,7 @@ export class SignInComponent implements OnInit {
   navigateToLogisticHome(){
     this.loading = true;
     setTimeout(() => {
-        this.router.navigate(['/logistic-home']);
+        this.router.navigate(['/mainapp']);
         this.loading = false;
     },150)
   }
