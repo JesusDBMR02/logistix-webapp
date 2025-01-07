@@ -1,0 +1,11 @@
+.full-width button {
+  width: 100% !important;
+}
+
+/* Si el estilo se encapsula, aplicar también al contenedor */
+.full-width {
+  display: flex;
+  width: 100%;
+}
+
+

@@ -1,0 +1,42 @@
+
+/* Importa el tema de PrimeNG */
+
+@import "primeicons/primeicons.css";
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+@import "/node_modules/primeflex/primeflex.css";
+
+/* Opcional: agrega estilos globales y otras configuraciones */
+html, body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background-image: url("../src/assets/istockphoto-1484852942-612x612.jpg");
+  backdrop-filter: blur(10px);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.container{
+  width: 1024px;
+  margin: 0 auto
+}
+.p-password, .p-password input {
+  width: 100% !important;
+}
+.p-inputmask {
+  width: 100% !important;
+}
+.spinner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  z-index: 1000;
+}
+
