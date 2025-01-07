@@ -6,7 +6,8 @@ const {
     getAllBrands,
     createBrand,
     updateBrand,
-    deleteBrand
+    deleteBrand,
+    getBrandById
 } = require('../controllers/brandController');
 
 router.use((req, res, next) => {
@@ -20,6 +21,8 @@ router.get('/',authMiddleware, getAllBrands);
 router.post('/',authMiddleware, createBrand);
 
 router.put('/:id',authMiddleware, updateBrand);
+
+router.get('/:id',authMiddleware, getBrandById);
 
 router.delete('/:id',authMiddleware, deleteBrand);
 

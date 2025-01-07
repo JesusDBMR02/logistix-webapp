@@ -18,6 +18,9 @@ import { TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { FileUploadModule } from 'primeng/fileupload';
+import {ScrollTopModule} from 'primeng/scrolltop';
+
 @NgModule({
   exports: [
     ToolbarModule,
@@ -38,7 +41,9 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
     TableModule,
     DropdownModule,
     DialogModule,
-    InputTextareaModule
+    InputTextareaModule,
+    FileUploadModule,
+    ScrollTopModule
   ],
 })
 export class MaterialModule {}

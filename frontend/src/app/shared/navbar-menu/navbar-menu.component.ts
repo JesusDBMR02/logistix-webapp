@@ -42,7 +42,7 @@ export class NavbarMenuComponent implements OnInit {
       this.authService
       .logout()
       .then((token) => {
-        this.showToast('success', 'Inicio de sesión con Google con éxito.');
+        this.showToast('success', 'Log out successfull.');
         this.sessionService.removeDataSession();
         this.navigateToLogin();
       })

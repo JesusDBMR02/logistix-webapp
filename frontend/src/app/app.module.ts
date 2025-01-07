@@ -22,6 +22,7 @@ import { MenuComponent } from './shared/menu/menu.component';
 import { MainappComponent } from './mainapp/mainapp.component';
 import { CategoryComponent } from './mainapp/category/category.component';
 import { DataView, DataViewModule } from 'primeng/dataview';
+import { BrandComponent } from './mainapp/brand/brand.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { DataView, DataViewModule } from 'primeng/dataview';
     HomeComponent,
     FooterComponent,
     CategoryComponent,
+    BrandComponent,
     SignUpComponent,
     NavbarMenuComponent,
     ConfirmEmailComponent,

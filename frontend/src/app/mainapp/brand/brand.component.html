@@ -3,7 +3,7 @@
         <p-progressSpinner ariaLabel="loading" />
     </div>
     <div class="col-12">
-        <p-card header="Categories">
+        <p-card header="Brands">
             <div class="row mb-2 mx-2">
                 <button pButton type="button" icon="pi pi-plus" class="p-button mr-2"
                 (click)="showDialogCreate()">
@@ -16,41 +16,49 @@
              
                 <span class="p-input-icon-left ml-2">
                     <i class="pi pi-search"></i>
-                    <input pInputText type="text" placeholder="Search by name" [(ngModel)]="searchTerm" (input)="filterCategories()" />
+                    <input pInputText type="text" placeholder="Search by name" [(ngModel)]="searchTerm" (input)="filterBrands()" />
                 </span>
             
             </div>
-            <div class="h-30rem xl:h-auto overflow-y-scroll">
-
-            <p-dataView [value]="filteredCategories" layout="list" [rows]="5" [paginator]="true" [sortField]="sortField" [sortOrder]="sortOrder">
-                <ng-template let-category pTemplate="list">
-                    <div *ngFor="let category of category; let first = first" class="p-dataview-list">
-                        <div class="p-grid mx-2 my-3 border-round bg-cyan-300 p-3">
-                            <!-- Name -->
-                            <div class="p-col-4">
-                                <h2>{{ category.name }}</h2>
+            <div class="h-30rem xl:h-full overflow-y-scroll">
+            <p-dataView [value]="filteredBrands" [rows]="5" [paginator]="true" [sortField]="sortField" [sortOrder]="sortOrder">
+                <ng-template let-brand pTemplate="list">
+                    <div *ngFor="let brand of brand; let first = first" class="p-dataview-list">
+                        <div
+                        class="flex flex-col sm:flex-row sm:items-center p-3 mx-2 my-3 gap-4 border-round bg-cyan-300"
+                        
+                    >
+                        <div class="md:w-40 relative">
+                            <img
+                                class="block xl:block mx-auto rounded-border"
+                                width="100px"
+                                [src]="brand.logo"
+                                [alt]="brand.name"
+                            />
+                            
+                        </div>
+                        <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
+                            <div class="flex flex-row md:flex-col justify-between items-start gap-2">
+                                <div>
+                                    <span class="font-medium text-secondary text-lg">{{ brand.name }}</span>
+                                    <div class=" font-medium text-surface-900 dark:text-surface-0 mt-2 text-sm">{{ brand.description }}</div>
+                                </div>
                             </div>
-
-                            <!-- Description -->
-                            <div class="p-col-6">
-                                <p>{{ category.description }}</p>
-                            </div>
-
-                            <!-- Acction Buttons -->
-                            <div class="p-col-2 text-right">
-                                <button pButton type="button" label="Edit" icon="pi pi-pencil"
-                                    class="p-button-sm p-button-warning mr-2" (click)="showDialogUpdate(category._id)">
-                                </button>
-                                <button pButton type="button" label="Remove" icon="pi pi-trash"
-                                    class="p-button-sm p-button-danger" (click)="deleteCategory(category._id)">
-                                </button>
-                            </div>
+                        </div>
+                        <div class=" text-right">
+                            <button pButton type="button" label="Edit" icon="pi pi-pencil"
+                                class="p-button-sm p-button-warning mr-2" (click)="showDialogUpdate(brand._id)">
+                            </button>
+                            <button pButton type="button" label="Remove" icon="pi pi-trash"
+                                class="p-button-sm p-button-danger" (click)="deleteBrand(brand._id)">
+                            </button>
+                        </div>
                         </div>
                     </div>
                 </ng-template>
 
                 <ng-template pTemplate="empty">
-                    <p>No categories available</p>
+                    <p>No brands available</p>
                 </ng-template>
             </p-dataView>
             </div>
@@ -84,14 +92,17 @@
         </div>
     </ng-template>
 </p-confirmDialog>
-<p-dialog header="Create Category" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
-    <form [formGroup]="createUptForm" (ngSubmit)="createCategory()">
-    <span class="p-text-secondary block mb-3">Create a new category</span>
+<p-dialog header="Create Brand" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+    <form [formGroup]="createUptForm" (ngSubmit)="createBrand()">
+    <span class="p-text-secondary block mb-3">Create a new brand</span>
     <div class=" mb-3 mr-1">
         <input pInputText formControlName="name" placeholder="Name" class="w-full" id="name" />
     </div>
     <div class=" mb-3">
         <textarea rows="5" cols="34" pInputTextarea formControlName="description" placeholder="Description"></textarea>
+    </div>
+    <div class="mb-3">
+        <p-fileUpload #fileUpload mode="basic" name="file" accept="image/*" (onSelect)="onFileSelected($event)" chooseLabel="Choose" />
     </div>
     <div class="flex justify-content-between gap-2">
         <p-button label="Cancel" severity="secondary" (click)="visible = false" />
@@ -99,14 +110,20 @@
     </div>
     </form>
 </p-dialog>
-<p-dialog header="Update Category" [modal]="true" [(visible)]="visibleUpt" [style]="{ width: '25rem' }">
-    <form [formGroup]="createUptForm" (ngSubmit)="updateCategory(id)">
+<p-dialog header="Update brand" [modal]="true" [(visible)]="visibleUpt" [style]="{ width: '25rem' }">
+    <form [formGroup]="createUptForm" (ngSubmit)="updateBrand(id)">
     <span class="p-text-secondary block mb-3">Edit this category</span>
     <div class=" mb-3 mr-1">
         <input pInputText formControlName="name" placeholder="Name" class="w-full" id="name" />
     </div>
     <div class=" mb-3">
         <textarea rows="5" cols="34" pInputTextarea formControlName="description" placeholder="Description"></textarea>
+    </div>
+    <div class="mb-3">
+        <p-fileUpload mode="basic" name="file" accept="image/*" (onSelect)="onFileSelected($event)" chooseLabel="Choose" />
+        <div class="mt-2">
+            <img [src]="logo" alt="Selected File" width="100px" *ngIf="logo" />
+        </div>
     </div>
     <div class="flex justify-content-between gap-2">
         <p-button label="Cancel" severity="secondary" (click)="visible = false" />

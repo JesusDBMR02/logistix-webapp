@@ -6,28 +6,30 @@ import { SessionService } from './session.service';
 @Injectable({
   providedIn: 'root'
 })
-export class CategoryService {
-  apiUrl = 'http://localhost:3000/api/categories/'; 
+export class BrandService {
+  apiUrl = 'http://localhost:3000/api/brands/'; 
   
   token = this.sessionService.getToken();
   headers= new HttpHeaders({
     Authorization: 'Bearer ' +this.token
   });
-  constructor(private http: HttpClient,private sessionService:SessionService) { }
+  constructor(private http: HttpClient,
+    private sessionService:SessionService) { }
 
-  getCategories(): Observable<any[]> {
+  getBrands(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl, {headers: this.headers});
   }
-  getCategoryById(id: String): Observable<any> {
+  getBrandById(id: String): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`, {headers: this.headers});
   }
-  createCategory(categoryData: any): Observable<any> {
+  createBrand(categoryData: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}`, categoryData,{headers: this.headers});
   }
-  updateCategory(id:String,categoryData: any): Observable<any> {
+  updateBrand(id:String,categoryData: any): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/${id}`, categoryData,{headers: this.headers});
   }
-  deleteCategory(id: String): Observable<any> {
+  deleteBrand(id: String): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`,{headers: this.headers});
   }
+
 }

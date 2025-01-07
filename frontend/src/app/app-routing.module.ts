@@ -8,6 +8,7 @@ import { ConfirmEmailComponent } from './authentication/confirm-email/confirm-em
 import { CompanyComponent } from './mainapp/company/company.component';
 import { MainappComponent } from './mainapp/mainapp.component';
 import { CategoryComponent } from './mainapp/category/category.component';
+import { BrandComponent } from './mainapp/brand/brand.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/sign-in', pathMatch: 'full' },
@@ -20,7 +21,7 @@ const routes: Routes = [
     { path:'category', component: CategoryComponent},
     { path: 'home', component: HomeComponent },
     { path: 'company', component: CompanyComponent },
-    
+    { path: 'brand', component: BrandComponent },
     { path: '', redirectTo: 'home', pathMatch: 'full' },
   ],
 }
