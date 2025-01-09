@@ -1,0 +1,117 @@
+<div class="row">
+    <div *ngIf="loading" class="flex align-items-center spinner-overlay z-5">
+        <p-progressSpinner ariaLabel="loading" />
+    </div>
+    <div class="col-12">
+        <p-card header="Categories">
+            <div class="row mb-2 mx-2">
+                <button pButton type="button" icon="pi pi-plus" class="p-button mr-2"
+                (click)="showDialogCreate()">
+                </button>
+                <p-dropdown 
+                [options]="sortOptions" 
+                (onChange)="onSortChange($event)" 
+                placeholder="Sort by">
+              </p-dropdown>
+             
+                <span class="p-input-icon-left ml-2">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" placeholder="Search by name" [(ngModel)]="searchTerm" (input)="filterCategories()" />
+                </span>
+            
+            </div>
+            <div class="h-30rem xl:h-auto overflow-y-scroll">
+
+            <p-dataView [value]="filteredCategories" layout="list" [rows]="5" [paginator]="true" [sortField]="sortField" [sortOrder]="sortOrder">
+                <ng-template let-category pTemplate="list">
+                    <div *ngFor="let category of category; let first = first" class="p-dataview-list">
+                        <div class="p-grid mx-2 my-3 border-round bg-cyan-300 p-3">
+                            <!-- Name -->
+                            <div class="p-col-4">
+                                <h2>{{ category.name }}</h2>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="p-col-6">
+                                <p>{{ category.description }}</p>
+                            </div>
+
+                            <!-- Acction Buttons -->
+                            <div class="p-col-2 text-right">
+                                <button pButton type="button" label="Edit" icon="pi pi-pencil"
+                                    class="p-button-sm p-button-warning mr-2" (click)="showDialogUpdate(category._id)">
+                                </button>
+                                <button pButton type="button" label="Remove" icon="pi pi-trash"
+                                    class="p-button-sm p-button-danger" (click)="deleteCategory(category._id)">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="empty">
+                    <p>No categories available</p>
+                </ng-template>
+            </p-dataView>
+            </div>
+        </p-card>
+    </div>
+<p-toast/>
+<p-confirmDialog #cd>
+    <ng-template pTemplate="headless" let-message>
+        <div class="flex flex-column align-items-center p-5 surface-overlay border-round">
+            <div class="border-circle bg-yellow-400 inline-flex justify-content-center align-items-center h-6rem w-6rem">
+                <i class="{{message.icon}} text-5xl "></i>
+            </div>
+            <span class="font-bold text-2xl block mb-2 mt-4">
+                {{ message.header }}
+            </span>
+            <p class="mb-0">{{ message.message }}</p>
+            <div class="flex align-items-center gap-2 mt-4">
+                <button 
+                    pButton 
+                    label="Accept" 
+                    (click)="cd.accept()" 
+                    class="w-8rem">
+                </button>
+                <button 
+                    pButton 
+                    label="Cancel" 
+                    (click)="cd.reject()" 
+                    class="p-button-outlined w-8rem ">
+                </button>
+            </div>
+        </div>
+    </ng-template>
+</p-confirmDialog>
+<p-dialog header="Create Category" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+    <form [formGroup]="createUptForm" (ngSubmit)="createCategory()">
+    <span class="p-text-secondary block mb-3">Create a new category</span>
+    <div class=" mb-3 mr-1">
+        <input pInputText formControlName="name" placeholder="Name" class="w-full" id="name" />
+    </div>
+    <div class=" mb-3">
+        <textarea rows="5" cols="34" pInputTextarea formControlName="description" placeholder="Description"></textarea>
+    </div>
+    <div class="flex justify-content-between gap-2">
+        <p-button label="Cancel" severity="secondary" (click)="visible = false" />
+        <p-button label="Save" type="submit" />
+    </div>
+    </form>
+</p-dialog>
+<p-dialog header="Update Category" [modal]="true" [(visible)]="visibleUpt" [style]="{ width: '25rem' }">
+    <form [formGroup]="createUptForm" (ngSubmit)="updateCategory(id)">
+    <span class="p-text-secondary block mb-3">Edit this category</span>
+    <div class=" mb-3 mr-1">
+        <input pInputText formControlName="name" placeholder="Name" class="w-full" id="name" />
+    </div>
+    <div class=" mb-3">
+        <textarea rows="5" cols="34" pInputTextarea formControlName="description" placeholder="Description"></textarea>
+    </div>
+    <div class="flex justify-content-between gap-2">
+        <p-button label="Cancel" severity="secondary" (click)="visible = false" />
+        <p-button label="Edit" type="submit" />
+    </div>
+    </form>
+</p-dialog>
+</div>

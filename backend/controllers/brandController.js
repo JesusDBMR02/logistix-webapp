@@ -17,7 +17,16 @@ const getAllBrands = async (req, res) => {
         res.status(500).json({ message: 'Error al obtener las marcas.', error });
     }
 };
-
+const getBrandById = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const brand = await db.findOne({ _id: new ObjectId(id) })
+        res.status(200).json(brand);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al obtener la marca', error });
+    }
+};
 const createBrand = async (req, res) => {
     const { name, description, logo } = req.body;
     try {
@@ -73,4 +82,4 @@ const deleteBrand = async (req, res) => {
     }
 };
 
-module.exports = { setDb, getAllBrands, createBrand, updateBrand, deleteBrand };
+module.exports = { setDb, getAllBrands, getBrandById, createBrand, updateBrand, deleteBrand };

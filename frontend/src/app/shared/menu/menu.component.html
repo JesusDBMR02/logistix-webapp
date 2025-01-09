@@ -1,0 +1,14 @@
+<p-menu [model]="items" styleClass="w-full m-4 md:w-15rem">
+
+    <ng-template pTemplate="submenuheader" let-item>
+        <span class="text-primary font-bold">{{ item.label }}</span>
+    </ng-template>
+    <ng-template pTemplate="item" let-item let-root="root">
+        <a pRipple class="flex align-items-center p-menuitem-link" [routerLink]="item.routerLink">
+            <span [class]="item.icon"></span>
+            <span class="ml-2">{{ item.label }}</span>
+            <i *ngIf="item.items" [ngClass]="['pi', root ? 'pi-angle-down ml-2' : 'pi-angle-right ml-auto']"></i>
+
+        </a>
+    </ng-template>
+</p-menu>
