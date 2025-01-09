@@ -1,58 +1,77 @@
 import { ChangeDetectorRef, Component, OnInit, signal, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
-import { FileUpload } from 'primeng/fileupload';
-import { BrandService } from 'src/app/services/brand.service';
-import { FirebaseStorageService } from 'src/app/services/firebaseStorage.service';
+import { SupplierService } from 'src/app/services/supplier.service';
 
 @Component({
   selector: 'app-category',
-  templateUrl: './brand.component.html',
-  styleUrl: './brand.component.scss'
+  templateUrl: './supplier.component.html',
+  styleUrl: './supplier.component.scss'
 })
-export class BrandComponent implements OnInit {
-  brands: any[] = [];
+export class SupplierComponent implements OnInit {
+  suppliers: any[] = [];
   sortOrder!: number;
   sortField!: string;
   sortOptions!: SelectItem[];
+  sortStatus!: SelectItem[];
   visible: boolean = false;
   createUptForm: FormGroup;
   visibleUpt: boolean = false;
   id:string = "";
+  notes:string = "";
+  status:string="";
   loading: boolean = false;
-  filteredBrands: any[] = [];
+  filteredSuppliers: any[] = [];
   searchTerm: string = '';
-  selectedFile: File | null = null; 
-  logo: string = '';
-  @ViewChild('fileUpload') fileUpload!: FileUpload;
+  supplierType = [
+    { label: 'Wholesaler', value: 'Wholesaler' },
+    { label: 'Manufacturers', value: 'Manufacturers' },
+    { label: 'Importers', value: 'Importers' },
 
+];
+  visibleNotes: boolean = false;
   constructor(private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private brandService: BrandService,
+    private supplierService: SupplierService,
     private cdr: ChangeDetectorRef,
     private fb: FormBuilder,
-    private firebaseStorageService: FirebaseStorageService
 
   ) {
     this.createUptForm = this.fb.group({
           name: ['', [Validators.required]],
-          description: ['',[Validators.required,]],
+          contact: ['',[Validators.required]],
+          phone:['', [Validators.required]],
+          email:['', [Validators.required, Validators.email]],
+          supplierType: ['', [Validators.required]],
+          notes:[''],
+          address: this.fb.group({
+            street: [''],
+            city: [''],
+            state: [''],
+            postalCode: [''],
+            country: ['']
+          })
+          
         });
   }
 
   ngOnInit() {
-    this.getBrands();
+    this.getSuppliers();
     this.sortOptions = [
       { label: 'Name (A - Z)', value: 'name' },
       { label: 'Name (Z - A)', value: '!name' },
   ];
+    this.sortStatus = [
+      { label: 'Active', value: 'status' },
+      { label: 'Inactive', value: '!status' },]
   }
-  getBrands(){
+  getSuppliers(){
     this.loading = true;
-    this.brandService.getBrands().subscribe({
+    this.supplierService.getSuppliers().subscribe({
       next: (data) => {
-        this.brands = data;
-        this.filteredBrands = data;
+        this.suppliers = data;
+        this.filteredSuppliers = data;
+        console.log(this.filteredSuppliers)
         this.loading = false;
         this.cdr.detectChanges(); 
       },
@@ -62,73 +81,49 @@ export class BrandComponent implements OnInit {
     });
   }
 
-  getBrandById(id: String){
-    this.brandService.getBrandById(id).subscribe({
+  getSupplierById(id: String){
+    this.supplierService.getSupplierById(id).subscribe({
       next: (response:any) => {
         this.createUptForm.patchValue({
-          name: response.name,
-          description: response.description,
+          name:response.name ,
+          contact: response.contact,
+          phone:response.phone,
+          email:response.email,
+          supplierType:response.supplierType ,
+          notes:response.notes,
+          address: response.address
           
         });
         this.id = response._id;
-        this.logo = response.logo || '';
+        this.status = response.status;
+        this.notes = response.notes
       },
       error: (error) => {
         this.showToast('error','An error occurred'+ error);
       }
     });
   }
-  onFileSelected(event: any) {
-    const file = event.files[0]; // Acceder al primer archivo seleccionado
-    if (file) {
-      this.selectedFile = file;
-      
-      // Generar una URL de vista previa
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.logo = e.target.result; // Asignar la URL para vista previa
-      };
-      reader.readAsDataURL(file);
-    }  }
-
-  uploadFile(callback: (url: string) => void) {
-    if (this.selectedFile) {
-      const folder = 'brands';
-      this.firebaseStorageService.uploadFile(this.selectedFile, folder).subscribe({
-        next: (url: string) => {
-          callback(url); 
-        },
-        error: (error) => {
-          this.showToast('error', 'Failed to upload the file: ' + error);
-        }
-      });
-    } else {
-      callback(this.logo); 
-    }
-  }
-  updateBrand(id: string) {
+ 
+  updateSupplier(id: string) {
     if (this.createUptForm.valid) {
       this.confirmationService.confirm({
-        message: 'Are you sure you want to edit this brand?',
+        message: 'Are you sure you want to edit this supplier?',
         header: 'Edit Confirmation',
         icon: 'pi pi-exclamation-circle',
         accept: () => {
-          this.uploadFile((url) => {
-            const brandData = { ...this.createUptForm.value, logo: url };
-            this.brandService.updateBrand(id, brandData).subscribe({
+            const supplierData = this.createUptForm.value
+            this.supplierService.updateSupplier(id, supplierData).subscribe({
               next: () => {
-                this.showToast('success', 'The brand updated successfully');
-                this.getBrands();
+                this.showToast('success', 'The supplier updated successfully');
+                this.getSuppliers();
                 this.createUptForm.reset();
                 this.visibleUpt = false;
-                this.selectedFile = null;
-                this.logo = '';
               },
               error: (error: any) => {
                 this.showToast('error', 'An error occurred: ' + error);
               }
             });
-          });
+         
         }
       });
     } else {
@@ -136,16 +131,16 @@ export class BrandComponent implements OnInit {
     }
   }
 
-  deleteBrand(id: string) {
+  deleteSupplier(id: string) {
     this.confirmationService.confirm({
-      message: 'Are you sure you want to delete this brand?',
+      message: 'Are you sure you want to delete this supplier?',
       header: 'Delete Confirmation',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.brandService.deleteBrand(id).subscribe({
+        this.supplierService.deleteSupplier(id).subscribe({
           next: () => {
-            this.showToast('success', 'Brand deleted successfully');
-            this.getBrands();
+            this.showToast('success', 'Supplier deleted successfully');
+            this.getSuppliers();
           },
           error: (error: any) => {
             this.showToast('error', 'An error occurred: ' + error);
@@ -155,38 +150,58 @@ export class BrandComponent implements OnInit {
     });
   }
     
-  createBrand() {
+  createSupplier() {
     if (this.createUptForm.valid) {
-      this.uploadFile((url) => {
-        const brandData = { ...this.createUptForm.value, logo: url };
-        this.brandService.createBrand(brandData).subscribe({
+        const supplierData = {...this.createUptForm.value, 'status':'active'};
+        console.log(supplierData)
+        this.supplierService.createSupplier(supplierData).subscribe({
           next: () => {
             this.showToast('success', 'New brand added successfully');
-            this.getBrands();
+            this.getSuppliers();
             this.createUptForm.reset();
             this.visible = false;
-            this.selectedFile = null;
-            this.logo = '';
           },
           error: (error) => {
             this.showToast('error', 'An error occurred: ' + error);
           }
         });
-      });
     } else {
       this.showToast('warn', 'The form is invalid');
     }
   }
-
+inactiveActive(id:String){
+  this.getSupplierById(id);
+  this.confirmationService.confirm({
+    message: 'Are you sure you want to change the status of this supplier?',
+    header: 'Edit Confirmation',
+    icon: 'pi pi-exclamation-circle',
+    accept: () => {
+        const supplierData = {status:this.status === 'active'? 'inactive' : 'active'}
+        this.supplierService.updateSupplier(id, supplierData).subscribe({
+          next: () => {
+            this.showToast('success', 'The status of the supplier changed');
+            this.getSuppliers();
+          },
+          error: (error: any) => {
+            this.showToast('error', 'An error occurred: ' + error);
+          }
+        });
+     
+    }
+  });
+}
   
 
   showDialogCreate(){
     this.visible = true;
     this.createUptForm.reset();
-    this.fileUpload.clear();
+  }
+  showDialogNotes(id:String){
+    this.visibleNotes = true;
+    this.getSupplierById(id)
   }
   showDialogUpdate(id:String){
-    this.getBrandById(id);
+    this.getSupplierById(id);
     this.visibleUpt = true;
   }
   onSortChange(event: any) {
@@ -200,11 +215,11 @@ export class BrandComponent implements OnInit {
       this.sortField = value;
     }
 
-    this.sortBrands();
+    this.sortSupplier();
   }
 
-  sortBrands() {
-    this.brands.sort((a, b) => {
+  sortSupplier() {
+    this.suppliers.sort((a, b) => {
       const fieldA = a[this.sortField].toLowerCase();
       const fieldB = b[this.sortField].toLowerCase();
 
@@ -223,11 +238,11 @@ export class BrandComponent implements OnInit {
   }
   filterBrands(): void {
     if (!this.searchTerm) {
-      this.filteredBrands = this.brands;
+      this.filteredSuppliers = this.suppliers;
     } else {
       const lowerSearch = this.searchTerm.toLowerCase();
-      this.filteredBrands = this.brands.filter(brand =>
-        brand.name.toLowerCase().includes(lowerSearch)
+      this.filteredSuppliers = this.suppliers.filter(supplier =>
+        supplier.name.toLowerCase().includes(lowerSearch)
       );
     }
   }

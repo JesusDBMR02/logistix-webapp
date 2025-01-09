@@ -16,11 +16,20 @@ const getAllSuppliers = async (req, res) => {
         res.status(500).json({ message: 'Error al obtener las proveedores.', error });
     }
 };
-
-const createSupplier = async (req, res) => {
-    const {name, contact, phone, email, address, supplierType , suppliedProducts, notes } = req.body;   
+const getSupplierById = async (req, res) => {
     try {
-        const supplier = new Supplier(name, contact, phone, email, address, supplierType , suppliedProducts, notes);
+        const id = req.params.id;
+        const supplier = await db.findOne({ _id: new ObjectId(id) })
+        res.status(200).json(supplier);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al obtener el proovedor', error });
+    }
+};
+const createSupplier = async (req, res) => {
+    const {name, contact, phone, email, address, supplierType, status, notes } = req.body;   
+    try {
+        const supplier = new Supplier(name, contact, phone, email, address, supplierType,status, notes);
         const result = await db.insertOne(supplier);
         if (!result.insertedId) {
             return res.status(500).json({ message: 'Error al insertar el proveedor' });
@@ -71,4 +80,4 @@ const deleteSupplier = async (req, res) => {
     }
 };
 
-module.exports = { setDb, getAllSuppliers, createSupplier, updateSupplier, deleteSupplier };
+module.exports = { setDb, getAllSuppliers, getSupplierById, createSupplier, updateSupplier, deleteSupplier };

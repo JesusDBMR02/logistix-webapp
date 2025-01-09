@@ -23,6 +23,7 @@ import { MainappComponent } from './mainapp/mainapp.component';
 import { CategoryComponent } from './mainapp/category/category.component';
 import { DataView, DataViewModule } from 'primeng/dataview';
 import { BrandComponent } from './mainapp/brand/brand.component';
+import { SupplierComponent } from './mainapp/supplier/supplier.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { BrandComponent } from './mainapp/brand/brand.component';
     FooterComponent,
     CategoryComponent,
     BrandComponent,
+    SupplierComponent,
     SignUpComponent,
     NavbarMenuComponent,
     ConfirmEmailComponent,

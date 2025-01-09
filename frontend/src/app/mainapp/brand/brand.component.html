@@ -25,7 +25,7 @@
                 <ng-template let-brand pTemplate="list">
                     <div *ngFor="let brand of brand; let first = first" class="p-dataview-list">
                         <div
-                        class="flex flex-col sm:flex-row sm:items-center p-3 mx-2 my-3 gap-4 border-round bg-cyan-300"
+                        class="flex flex-col sm:flex-row sm:items-center p-3 mx-2 my-3 gap-4 border-round  bg-cyan-200 shadow-2"
                         
                     >
                         <div class="md:w-40 relative">
@@ -112,7 +112,7 @@
 </p-dialog>
 <p-dialog header="Update brand" [modal]="true" [(visible)]="visibleUpt" [style]="{ width: '25rem' }">
     <form [formGroup]="createUptForm" (ngSubmit)="updateBrand(id)">
-    <span class="p-text-secondary block mb-3">Edit this category</span>
+    <span class="p-text-secondary block mb-3">Edit this brand</span>
     <div class=" mb-3 mr-1">
         <input pInputText formControlName="name" placeholder="Name" class="w-full" id="name" />
     </div>
