@@ -31,7 +31,7 @@ export class MenuComponent {
       },
       { label: 'Suppliers',
         items: [
-          { label: 'Suppliers', icon: 'pi pi-users', routerLink: '/suppliers' },
+          { label: 'Suppliers', icon: 'pi pi-users', routerLink: 'supplier' },
         ]
        },
       { label: 'Finances',

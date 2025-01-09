@@ -20,6 +20,7 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FileUploadModule } from 'primeng/fileupload';
 import {ScrollTopModule} from 'primeng/scrolltop';
+import { TagModule } from 'primeng/tag';
 
 @NgModule({
   exports: [
@@ -43,7 +44,8 @@ import {ScrollTopModule} from 'primeng/scrolltop';
     DialogModule,
     InputTextareaModule,
     FileUploadModule,
-    ScrollTopModule
+    ScrollTopModule,
+    TagModule,
   ],
 })
 export class MaterialModule {}

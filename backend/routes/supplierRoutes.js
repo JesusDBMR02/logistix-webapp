@@ -3,6 +3,7 @@ const router = express.Router();
 const {
     setDb,
     getAllSuppliers,
+    getSupplierById,
     createSupplier,
     updateSupplier,
     deleteSupplier
@@ -20,6 +21,8 @@ router.get('/',authMiddleware, getAllSuppliers);
 router.post('/',authMiddleware, createSupplier);
 
 router.put('/:id',authMiddleware, updateSupplier);
+
+router.get('/:id',authMiddleware, getSupplierById);
 
 router.delete('/:id',authMiddleware, deleteSupplier);
 

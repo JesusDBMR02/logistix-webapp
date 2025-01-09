@@ -1,0 +1,242 @@
+<div class="row">
+    <div *ngIf="loading" class="flex align-items-center spinner-overlay z-5">
+        <p-progressSpinner ariaLabel="loading" />
+    </div>
+    <div class="col-12">
+        <p-card header="Suppliers">
+            <div class="row mb-2 mx-2">
+                <button pButton type="button" icon="pi pi-plus" class="mr-2"
+                    (click)="showDialogCreate()"></button>
+                <p-dropdown [options]="sortOptions" class="mr-2" (onChange)="onSortChange($event)" placeholder="Sort by">
+                </p-dropdown>
+                <p-dropdown [options]="sortStatus" (onChange)="onSortChange($event)" placeholder="Sort by">
+                </p-dropdown>
+
+                <span class="p-input-icon-left ml-2">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" placeholder="Search by name" [(ngModel)]="searchTerm"
+                        (input)="filterBrands()" />
+                </span>
+            </div>
+            <div class="h-30rem xl:h-full overflow-y-scroll">
+                <p-dataView [value]="filteredSuppliers" [rows]="5" [paginator]="true" [sortField]="sortField"
+                    [sortOrder]="sortOrder">
+                    <ng-template let-supplier pTemplate="list">
+                        <div *ngFor="let supplier of supplier; let first = first" class="p-dataview-list">
+                            <div
+                                class="flex flex-col sm:flex-row sm:items-center p-3 mx-2 my-3 gap-4 border-round bg-cyan-200 shadow-2" >
+                                <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
+                                    <div class="flex flex-row md:flex-col justify-between items-start gap-2">
+                                        <div>
+                                            <span class="font-medium text-secondary text-lg">{{
+                                                supplier.name
+                                                }}</span>
+                                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2 text-md">
+                                                {{ supplier.supplierType }}
+                                            </div>
+                                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                                                <p-tag (click)="inactiveActive(supplier._id)" [severity]="
+                                                supplier.status === 'active' ? 'success' : 'danger'
+                                                " [value]="supplier.status" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
+                                    <div class="flex flex-row md:flex-col justify-between items-start gap-2">
+                                        <div>
+                                            <span class="font-medium text-secondary text-lg">Contact:</span>
+                                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2 text-md">
+                                                {{ supplier.contact }}
+                                            </div>
+                                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                                                {{supplier.phone}}
+                                            </div>
+                                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                                                {{supplier.email}}
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
+                                    <div class="flex flex-row md:flex-col justify-between items-start gap-2">
+                                        <div>
+                                            <span class="font-medium text-secondary text-lg">Address:</span>
+                                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2 text-md">
+                                                {{ supplier.address.country }}
+                                            </div>
+                                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                                                {{supplier.address.state}}
+                                            </div>
+                                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                                                {{supplier.address.city}}, {{supplier.address.postalCode}}
+                                            </div>
+                                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                                                {{supplier.address.street}}
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <button pButton type="button" icon="pi pi-eye"
+                                    class="p-button-sm mr-2"
+                                    (click)="showDialogNotes(supplier._id)"></button>
+                                    <button pButton type="button" label="Edit" icon="pi pi-pencil"
+                                        class="p-button-sm p-button-warning mr-2"
+                                        (click)="showDialogUpdate(supplier._id)"></button>
+                                    <button pButton type="button" label="Remove" icon="pi pi-trash"
+                                        class="p-button-sm p-button-danger"
+                                        (click)="deleteSupplier(supplier._id)"></button>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+
+                    <ng-template pTemplate="empty">
+                        <p>No brands available</p>
+                    </ng-template>
+                </p-dataView>
+            </div>
+        </p-card>
+    </div>
+    <p-toast />
+    <p-confirmDialog #cd>
+        <ng-template pTemplate="headless" let-message>
+            <div class="flex flex-column align-items-center p-5 surface-overlay border-round">
+                <div
+                    class="border-circle bg-yellow-400 inline-flex justify-content-center align-items-center h-6rem w-6rem">
+                    <i class="{{ message.icon }} text-5xl "></i>
+                </div>
+                <span class="font-bold text-2xl block mb-2 mt-4">
+                    {{ message.header }}
+                </span>
+                <p class="mb-0">{{ message.message }}</p>
+                <div class="flex align-items-center gap-2 mt-4">
+                    <button pButton label="Accept" (click)="cd.accept()" class="w-8rem"></button>
+                    <button pButton label="Cancel" (click)="cd.reject()" class="p-button-outlined w-8rem"></button>
+                </div>
+            </div>
+        </ng-template>
+    </p-confirmDialog>
+    <p-dialog header="Create Supplier" [modal]="true" [(visible)]="visible" [style]="{ width: '50rem' }">
+        <form [formGroup]="createUptForm" (ngSubmit)="createSupplier()">
+            <span class="p-text-secondary block mb-3">Create a new supplier</span>
+            <div class="flex row">
+                <div class="col-4">
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2 text-md">
+                        <input pInputText formControlName="name" placeholder="Name" class="w-full" id="name" />
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <p-dropdown [options]="supplierType" [style]="{ width: '100%' }" formControlName="supplierType" class="w-full" placeholder="Supplier Type">
+                        </p-dropdown>
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <textarea rows="5" cols="auto"  [style]="{ width: '100%' }" pInputTextarea formControlName="notes"
+                        placeholder="Notes"></textarea>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <span class="font-medium text-secondary text-lg">Contact:</span>
+                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2 text-md">
+                                <input pInputText formControlName="contact" placeholder="Contact" class="w-full" id="name" />
+                            </div>
+                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                                <input pInputText formControlName="phone" placeholder="Phone" class="w-full" id="name" />
+                            </div>
+                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                                <input pInputText formControlName="email" placeholder="Email" class="w-full" id="name" />
+                            </div>
+                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">       
+                            </div>
+                </div>
+                <div formGroupName="address" class="col-4">
+                    <span class="font-medium text-secondary text-lg">Address:</span>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2 text-md">
+                        <input pInputText formControlName="country" placeholder="Country" class="w-full" id="name" />
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <input pInputText formControlName="state" placeholder="State" class="w-full" id="name" />
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <input pInputText formControlName="city" placeholder="City" class="w-full" id="name" />
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <input pInputText formControlName="postalCode" placeholder="Postal Code" class="w-full" id="name" />
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <input pInputText formControlName="street" placeholder="Street" class="w-full" id="name" />
+                    </div>
+                </div>
+            </div>   
+            <div class="flex justify-content-between gap-2">
+                <p-button label="Cancel" severity="secondary" (click)="visible = false" />
+                <p-button label="Save" type="submit" />
+            </div>
+        </form>
+    </p-dialog>
+    <p-dialog header="Update Supplier" [modal]="true" [(visible)]="visibleUpt" [style]="{ width: '50rem' }">
+        <form [formGroup]="createUptForm" (ngSubmit)="updateSupplier(id)">
+            <span class="p-text-secondary block mb-3">Edit this supplier</span>
+            <div class="flex row">
+                <div class="col-4">
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2 text-md">
+                        <input pInputText formControlName="name" placeholder="Name" class="w-full" id="name" />
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <p-dropdown [options]="supplierType" [style]="{ width: '100%' }" formControlName="supplierType" class="w-full" placeholder="Supplier Type">
+                        </p-dropdown>
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <textarea rows="5" cols="auto"  [style]="{ width: '100%' }" pInputTextarea formControlName="notes"
+                        placeholder="Notes"></textarea>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <span class="font-medium text-secondary text-lg">Contact:</span>
+                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2 text-md">
+                                <input pInputText formControlName="contact" placeholder="Contact" class="w-full" id="name" />
+                            </div>
+                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                                <input pInputText formControlName="phone" placeholder="Phone" class="w-full" id="name" />
+                            </div>
+                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                                <input pInputText formControlName="email" placeholder="Email" class="w-full" id="name" />
+                            </div>
+                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">       
+                            </div>
+                </div>
+                <div formGroupName="address" class="col-4">
+                    <span class="font-medium text-secondary text-lg">Address:</span>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2 text-md">
+                        <input pInputText formControlName="country" placeholder="Country" class="w-full" id="name" />
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <input pInputText formControlName="state" placeholder="State" class="w-full" id="name" />
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <input pInputText formControlName="city" placeholder="City" class="w-full" id="name" />
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <input pInputText formControlName="postalCode" placeholder="Postal Code" class="w-full" id="name" />
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <input pInputText formControlName="street" placeholder="Street" class="w-full" id="name" />
+                    </div>
+                </div>
+            </div> 
+            <div class="flex justify-content-between gap-2">
+                <p-button label="Cancel" severity="secondary" (click)="visibleUpt = false" />
+                <p-button label="Save" type="submit" />
+            </div>
+        </form>
+    </p-dialog>
+    <p-dialog header="Notes" [modal]="true" [(visible)]="visibleNotes" [style]="{ width: '25rem' }">
+        
+            <span class="p-text-secondary block mb-3">{{notes}}</span>
+            <div class="flex justify-content-between gap-2">
+                <p-button label="Cancel" severity="secondary" (click)="visibleNotes = false" />
+            </div>            
+    </p-dialog>
+</div>
