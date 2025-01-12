@@ -1,19 +1,20 @@
 class Product {
-    constructor(name, description, categoryId, brandId, supplierId, purchasePrice, salePrice, discount = 0 ,tax=0, stock = 0, measuring = "unidades", status , img = "", atributes = {} ) {
+    constructor(name, description, category, brand, supplier, purchasePrice, salePrice, discount ,tax , stock , measuring, status , img , attributes,total) {
       this.name = name;
       this.description = description;
-      this.categoryId = categoryId; 
-      this.brandId = brandId; 
-      this.supplierId = supplierId; 
+      this.category = category; 
+      this.brand = brand; 
+      this.supplier = supplier; 
       this.purchasePrice = purchasePrice;
       this.salePrice = salePrice;
-      this.discount = discount; 
-      this.tax = tax; 
+      this.discount = discount; //No es necesario 
+      this.tax = tax; //No es necesario
       this.stock = stock;
       this.measuring = measuring;
-      this.status = status;
+      this.status = status; //No es necesario
       this.img = img;
-      this.atributes = atributes;
+      this.attributes = attributes;
+      this.total= total;
     }
 }
 module.exports = Product

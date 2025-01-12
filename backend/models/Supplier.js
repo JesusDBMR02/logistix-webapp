@@ -1,5 +1,5 @@
 class Supplier {
-    constructor(name, contact, phone, email, address, supplierType,status, notes) {
+    constructor(name, contact, phone, email, address, supplierType,status, notes, suppliedProducts) {
         this.name = name;
         this.contact = contact;
         this.phone = phone;
@@ -11,7 +11,7 @@ class Supplier {
             postalCode: address.postalCode || '',
             country: address.country || ''
         };
-        //this.suppliedProducts = suppliedProducts;
+        this.suppliedProducts = suppliedProducts;
         this.supplierType = supplierType;
         this.status = status;
         this.notes = notes||'';

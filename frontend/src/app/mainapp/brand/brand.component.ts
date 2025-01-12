@@ -6,7 +6,7 @@ import { BrandService } from 'src/app/services/brand.service';
 import { FirebaseStorageService } from 'src/app/services/firebaseStorage.service';
 
 @Component({
-  selector: 'app-category',
+  selector: 'app-brand',
   templateUrl: './brand.component.html',
   styleUrl: './brand.component.scss'
 })
@@ -79,21 +79,20 @@ export class BrandComponent implements OnInit {
     });
   }
   onFileSelected(event: any) {
-    const file = event.files[0]; // Acceder al primer archivo seleccionado
+    const file = event.files[0]; 
     if (file) {
       this.selectedFile = file;
       
-      // Generar una URL de vista previa
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        this.logo = e.target.result; // Asignar la URL para vista previa
+        this.logo = e.target.result; 
       };
       reader.readAsDataURL(file);
     }  }
 
   uploadFile(callback: (url: string) => void) {
     if (this.selectedFile) {
-      const folder = 'brands';
+      const folder = 'brands/img';
       this.firebaseStorageService.uploadFile(this.selectedFile, folder).subscribe({
         next: (url: string) => {
           callback(url); 
@@ -118,11 +117,7 @@ export class BrandComponent implements OnInit {
             this.brandService.updateBrand(id, brandData).subscribe({
               next: () => {
                 this.showToast('success', 'The brand updated successfully');
-                this.getBrands();
-                this.createUptForm.reset();
-                this.visibleUpt = false;
-                this.selectedFile = null;
-                this.logo = '';
+                location.reload();
               },
               error: (error: any) => {
                 this.showToast('error', 'An error occurred: ' + error);
@@ -162,11 +157,7 @@ export class BrandComponent implements OnInit {
         this.brandService.createBrand(brandData).subscribe({
           next: () => {
             this.showToast('success', 'New brand added successfully');
-            this.getBrands();
-            this.createUptForm.reset();
-            this.visible = false;
-            this.selectedFile = null;
-            this.logo = '';
+            location.reload();
           },
           error: (error) => {
             this.showToast('error', 'An error occurred: ' + error);
