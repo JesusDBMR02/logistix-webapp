@@ -21,7 +21,9 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FileUploadModule } from 'primeng/fileupload';
 import {ScrollTopModule} from 'primeng/scrolltop';
 import { TagModule } from 'primeng/tag';
-
+import { InputNumberModule } from 'primeng/inputnumber';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 @NgModule({
   exports: [
     ToolbarModule,
@@ -38,11 +40,14 @@ import { TagModule } from 'primeng/tag';
     ProgressSpinnerModule,
     MenubarModule,
     MenuModule,
+    InputGroupModule,
     DataViewModule,
+    InputGroupAddonModule,
     TableModule,
     DropdownModule,
     DialogModule,
     InputTextareaModule,
+    InputNumberModule,
     FileUploadModule,
     ScrollTopModule,
     TagModule,

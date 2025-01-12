@@ -20,32 +20,32 @@
                 </span>
             
             </div>
-            <div class="h-30rem xl:h-auto overflow-y-scroll">
+            <div class="h-40rem overflow-y-scroll">
 
             <p-dataView [value]="filteredCategories" layout="list" [rows]="5" [paginator]="true" [sortField]="sortField" [sortOrder]="sortOrder">
                 <ng-template let-category pTemplate="list">
                     <div *ngFor="let category of category; let first = first" class="p-dataview-list">
-                        <div class="p-grid mx-2 my-3 border-round  bg-cyan-200 shadow-2 p-3">
-                            <!-- Name -->
-                            <div class="p-col-4">
-                                <h2>{{ category.name }}</h2>
+                        <div
+                                class="flex flex-col sm:flex-row sm:items-center p-3 mx-2 my-3 gap-4 border-round  bg-cyan-200 shadow-2">
+                               
+                                <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
+                                    <div class="flex flex-row md:flex-col justify-between items-start gap-2">
+                                        <div>
+                                            <span class="font-medium text-secondary text-lg">{{ category.name }}</span>
+                                            <div class=" font-medium text-surface-900 dark:text-surface-0 mt-2 text-sm">
+                                                {{ category.description }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class=" text-right">
+                                    <button pButton type="button" icon="pi pi-pencil"
+                                        class=" p-button-rounded p-button-warning mr-2" (click)="showDialogUpdate(category._id)">
+                                    </button>
+                                    <button pButton type="button" icon="pi pi-trash"
+                                        class=" p-button-rounded p-button-danger" (click)="deleteCategory(category._id)">
+                                    </button>
+                                </div>
                             </div>
-
-                            <!-- Description -->
-                            <div class="p-col-6">
-                                <p>{{ category.description }}</p>
-                            </div>
-
-                            <!-- Acction Buttons -->
-                            <div class="p-col-2 text-right">
-                                <button pButton type="button" label="Edit" icon="pi pi-pencil"
-                                    class="p-button-sm p-button-warning mr-2" (click)="showDialogUpdate(category._id)">
-                                </button>
-                                <button pButton type="button" label="Remove" icon="pi pi-trash"
-                                    class="p-button-sm p-button-danger" (click)="deleteCategory(category._id)">
-                                </button>
-                            </div>
-                        </div>
                     </div>
                 </ng-template>
 

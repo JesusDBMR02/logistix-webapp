@@ -5,17 +5,24 @@ const {
     getAllProducts,
     createProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    getProductById
 } = require('../controllers/productController');
 const authMiddleware = require('../middleware/authMiddleware');
 
 router.use((req, res, next) => {
-    const collection = req.app.locals.db.collection('products');
-    setDb(collection);
+    const collectionProducts = req.app.locals.db.collection('products');
+    const collectionCategories = req.app.locals.db.collection('categories');
+    const collectionBrands = req.app.locals.db.collection('brands');
+    const collectionSuppliers = req.app.locals.db.collection('suppliers');
+
+    setDb(collectionProducts,collectionCategories,collectionBrands,collectionSuppliers);
     next();
   });
 
 router.get('/',authMiddleware, getAllProducts);
+
+router.get('/:id',authMiddleware, getProductById);
 
 router.post('/',authMiddleware, createProduct);
 

@@ -24,6 +24,8 @@ import { CategoryComponent } from './mainapp/category/category.component';
 import { DataView, DataViewModule } from 'primeng/dataview';
 import { BrandComponent } from './mainapp/brand/brand.component';
 import { SupplierComponent } from './mainapp/supplier/supplier.component';
+import { ProductComponent } from './mainapp/product/product.component';
+import { OrderListModule } from 'primeng/orderlist';
 
 @NgModule({
   declarations: [
@@ -35,6 +37,7 @@ import { SupplierComponent } from './mainapp/supplier/supplier.component';
     CategoryComponent,
     BrandComponent,
     SupplierComponent,
+    ProductComponent,
     SignUpComponent,
     NavbarMenuComponent,
     ConfirmEmailComponent,

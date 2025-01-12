@@ -10,6 +10,7 @@ import { MainappComponent } from './mainapp/mainapp.component';
 import { CategoryComponent } from './mainapp/category/category.component';
 import { BrandComponent } from './mainapp/brand/brand.component';
 import { SupplierComponent } from './mainapp/supplier/supplier.component';
+import { ProductComponent } from './mainapp/product/product.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/sign-in', pathMatch: 'full' },
@@ -24,6 +25,7 @@ const routes: Routes = [
     { path: 'company', component: CompanyComponent },
     { path: 'brand', component: BrandComponent },
     { path: 'supplier', component: SupplierComponent },
+    { path: 'product', component: ProductComponent },
     { path: '', redirectTo: 'home', pathMatch: 'full' },
   ],
 }

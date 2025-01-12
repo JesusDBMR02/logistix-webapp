@@ -19,7 +19,7 @@ export class MenuComponent {
        },
       { label: 'Warehouse',
         items: [
-          { label: 'Products', icon: 'pi pi-box', routerLink: '/products' },
+          { label: 'Products', icon: 'pi pi-box', routerLink: 'product' },
         ]
        },
       {
@@ -34,7 +34,7 @@ export class MenuComponent {
           { label: 'Suppliers', icon: 'pi pi-users', routerLink: 'supplier' },
         ]
        },
-      { label: 'Finances',
+      { label: 'Accounting',
         items: [
           { label: 'Purchases', icon: 'pi pi-shopping-cart', routerLink: '/orders' },
           { label: 'Sales', icon: 'pi pi-shopping-bag', routerLink: '/invoices' },

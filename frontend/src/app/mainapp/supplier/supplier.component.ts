@@ -1,15 +1,17 @@
 import { ChangeDetectorRef, Component, OnInit, signal, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
+import { ProductService } from 'src/app/services/product.service';
 import { SupplierService } from 'src/app/services/supplier.service';
 
 @Component({
-  selector: 'app-category',
+  selector: 'app-supplier',
   templateUrl: './supplier.component.html',
   styleUrl: './supplier.component.scss'
 })
 export class SupplierComponent implements OnInit {
   suppliers: any[] = [];
+  products: any[] = [];
   sortOrder!: number;
   sortField!: string;
   sortOptions!: SelectItem[];
@@ -33,6 +35,8 @@ export class SupplierComponent implements OnInit {
   constructor(private messageService: MessageService,
     private confirmationService: ConfirmationService,
     private supplierService: SupplierService,
+    private productService: ProductService,
+
     private cdr: ChangeDetectorRef,
     private fb: FormBuilder,
 
@@ -71,7 +75,6 @@ export class SupplierComponent implements OnInit {
       next: (data) => {
         this.suppliers = data;
         this.filteredSuppliers = data;
-        console.log(this.filteredSuppliers)
         this.loading = false;
         this.cdr.detectChanges(); 
       },
@@ -84,6 +87,7 @@ export class SupplierComponent implements OnInit {
   getSupplierById(id: String){
     this.supplierService.getSupplierById(id).subscribe({
       next: (response:any) => {
+        this.products = [];
         this.createUptForm.patchValue({
           name:response.name ,
           contact: response.contact,
@@ -94,6 +98,11 @@ export class SupplierComponent implements OnInit {
           address: response.address
           
         });
+        console.log(response); // Agrega este log para inspeccionar la respuesta
+        response.suppliedProducts.map((product:any) =>{
+          this.products.push(product);
+        })
+        this.products;
         this.id = response._id;
         this.status = response.status;
         this.notes = response.notes
@@ -153,7 +162,6 @@ export class SupplierComponent implements OnInit {
   createSupplier() {
     if (this.createUptForm.valid) {
         const supplierData = {...this.createUptForm.value, 'status':'active'};
-        console.log(supplierData)
         this.supplierService.createSupplier(supplierData).subscribe({
           next: () => {
             this.showToast('success', 'New brand added successfully');
