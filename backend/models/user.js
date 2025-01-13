@@ -1,5 +1,5 @@
 class User{
-    constructor(email, password, name, lastName, company, role, address, phone){
+    constructor(email, password, name, lastName, company, role, address, phone, profile){
         this.email = email;
         this.password = password;
         this.name = name;
@@ -8,6 +8,7 @@ class User{
         this.role = role;
         this.address= address;
         this.phone = phone;
+        this.profile = profile;
     }
 }
 module.exports = User;

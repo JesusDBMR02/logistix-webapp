@@ -16,6 +16,7 @@ body {
   backdrop-filter: blur(10px);
   background-repeat: no-repeat;
   background-size: cover;
+  background-attachment: fixed;
 }
 .container{
   width: 1024px;

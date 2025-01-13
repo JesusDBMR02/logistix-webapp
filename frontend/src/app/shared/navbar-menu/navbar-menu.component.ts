@@ -21,7 +21,8 @@ export class NavbarMenuComponent implements OnInit {
      
       {
         label: 'Company',
-        icon: 'pi pi-building'
+        icon: 'pi pi-building',
+        routerLink: 'company'
       },
 
       {

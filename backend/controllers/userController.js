@@ -1,4 +1,4 @@
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 
@@ -45,5 +45,49 @@ const signIn = async (req, res) => {
   }
 };
 
-module.exports = { setDb, signUp, signIn };
+const getUsers = async (req, res) => {
+  try {
+      const user = await db.find().toArray();
+      
+
+      res.status(200).json(user);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error al obtener el usuario.', error });
+  }
+};
+
+const getUserByEmail = async (req, res) => {
+   try {
+          const email = req.params.email;
+          const user = await db.findOne({ email:email })
+          res.status(200).json(user);
+      } catch (error) {
+          console.error(error);
+          res.status(500).json({ message: 'Error al obtener el usuario', error });
+      }
+};
+
+const updateUser = async (req, res) => {
+  try {
+          const id = req.params.id; 
+          const data = req.body; 
+  
+          const result = await db.updateOne(
+              { _id: new ObjectId(id) }, 
+              { $set: data } 
+          )
+          if (result.matchedCount === 0) {
+              return res.status(404).json({ message: "Usuario no encontrada" });
+          }
+  
+          const updatedUser = await db.findOne({ _id: new ObjectId(id) });
+          res.json(updatedUser);
+      } catch (error) {
+          console.error("Error al actualizar el usuario:", error);
+          res.status(500).json({ message: "Error al actualizar el usuario", error });
+      } 
+}
+
+module.exports = { setDb, signUp, signIn, getUsers,getUserByEmail, updateUser };
 
