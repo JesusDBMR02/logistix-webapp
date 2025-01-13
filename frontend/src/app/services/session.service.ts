@@ -7,8 +7,9 @@ import { Injectable } from "@angular/core";
 export class SessionService {
     constructor(){}
 
-    saveDataSession(token:string){
+    saveDataSession(token:string, email:string){
         sessionStorage.setItem('token',token);
+        sessionStorage.setItem('email',email);
     }
     
     removeDataSession(){
@@ -17,5 +18,8 @@ export class SessionService {
     
     getToken(){
         return sessionStorage.getItem('token');
+    }
+    getEmail(){
+        return sessionStorage.getItem('email');
     }
 }

@@ -56,7 +56,7 @@ export class SignInComponent implements OnInit {
       .signInWithEmailAndPassword(email, password)
       .then((token) => {
         this.showToast('success', 'Inicio de sesión exitoso.');
-        this.sessionService.saveDataSession(token);
+        this.sessionService.saveDataSession(token, email);
         this.navigateToLogisticHome();
       })
       .catch((err) => {
@@ -69,7 +69,6 @@ export class SignInComponent implements OnInit {
       .signInWithGoogle()
       .then((token) => {
         this.showToast('success', 'Inicio de sesión con Google con éxito.');
-        this.sessionService.saveDataSession(token);
         this.navigateToLogisticHome();
       })
       .catch((error) => {
@@ -95,7 +94,6 @@ export class SignInComponent implements OnInit {
       .signInWithFacebook()
       .then((token) => {
         this.showToast('success', 'Inicio de sesión con Facebook con éxito.');
-        this.sessionService.saveDataSession(token);
         this.navigateToLogisticHome();
       })
       .catch((error) => {
