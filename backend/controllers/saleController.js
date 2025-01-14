@@ -16,11 +16,34 @@ const getAllSales = async (req, res) => {
         res.status(500).json({ message: 'Error al obtener las ventas.', error });
     }
 };
-
-const createSale = async (req, res) => {
-    const {products, totalAmount, paymentMethod, saleDate, notes } = req.body;   
+const getSaleById = async (req, res) => {
     try {
-        const sale = new Sale(products, totalAmount, paymentMethod, saleDate, notes);
+        const id = req.params.id;
+        const sale = await db.findOne({ _id: new ObjectId(id) })
+        res.status(200).json(sale);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al obtener la venta', error });
+    }
+};
+const createSale = async (req, res) => {
+    const {products, paymentMethod, saleDate, notes } = req.body;   
+    try {
+        const salesCount = await db.countDocuments(); 
+        const saleNumber = salesCount + 1;
+
+        const datePart = new Date().toISOString().split('T')[0];
+        const name = `Sale_${saleNumber}_${datePart}`;
+        let totalAmount = 0;
+        for (const product of products) {
+            if (product.total ) {
+                totalAmount += product.total;
+            } else {
+                return res.status(400).json({ message: 'Todos los productos deben tener precio y cantidad' });
+            }
+        }
+        const status = "PENDING";
+        const sale = new Sale(name, products, totalAmount ,status, paymentMethod, saleDate, notes);
         const result = await db.insertOne(sale);
         if (!result.insertedId) {
             return res.status(500).json({ message: 'Error al insertar la venta' });
@@ -39,8 +62,18 @@ const updateSale = async (req, res) => {
     
     try {
         const id = req.params.id; 
-        const data = req.body; 
-
+        let data = req.body; 
+        let totalAmount = 0;
+        if(data.products !== undefined){
+            for (const product of data.products) {
+                if (product.total ) {
+                    totalAmount += product.total;
+                } else {
+                    return res.status(400).json({ message: 'Todos los productos deben tener precio y cantidad' });
+                }
+            } 
+            data = {...data, totalAmount: totalAmount};
+        }
         const result = await db.updateOne(
             { _id: new ObjectId(id) }, 
             { $set: data } 
@@ -71,4 +104,4 @@ const deleteSale = async (req, res) => {
     }
 };
 
-module.exports = { setDb, getAllSales, createSale, updateSale, deleteSale };
+module.exports = { setDb, getAllSales,getSaleById, createSale, updateSale, deleteSale };

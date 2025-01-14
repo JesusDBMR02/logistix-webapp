@@ -113,7 +113,7 @@ export class CompanyComponent implements OnInit{
 
   uploadFile(callback: (url: string) => void) {
     if (this.selectedFile) {
-      const folder = 'brands/img';
+      const folder = 'company/img';
       this.firebaseStorageService.uploadFile(this.selectedFile, folder).subscribe({
         next: (url: string) => {
           callback(url); 

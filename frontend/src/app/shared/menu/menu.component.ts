@@ -37,7 +37,7 @@ export class MenuComponent {
       { label: 'Accounting',
         items: [
           { label: 'Purchases', icon: 'pi pi-shopping-cart', routerLink: '/orders' },
-          { label: 'Sales', icon: 'pi pi-shopping-bag', routerLink: '/invoices' },
+          { label: 'Sales', icon: 'pi pi-shopping-bag', routerLink: 'sale' },
         ]
        },
 
