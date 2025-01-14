@@ -24,6 +24,8 @@ import { TagModule } from 'primeng/tag';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { CalendarModule } from 'primeng/calendar';
+import { PickListModule } from 'primeng/picklist';
 @NgModule({
   exports: [
     ToolbarModule,
@@ -47,10 +49,12 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
     DropdownModule,
     DialogModule,
     InputTextareaModule,
+    CalendarModule,
     InputNumberModule,
     FileUploadModule,
     ScrollTopModule,
     TagModule,
+    PickListModule
   ],
 })
 export class MaterialModule {}

@@ -1,6 +1,6 @@
 class Purchase {
-    constructor(supplierId, products, totalAmount, purchaseDate, status = 'pending', notes = '') {
-        this.supplierId = supplierId;
+    constructor(supplier, products, totalAmount, purchaseDate, status , notes ) {
+        this.supplier = supplier;
         this.products = products;
         this.totalAmount = totalAmount;
         this.purchaseDate = purchaseDate;

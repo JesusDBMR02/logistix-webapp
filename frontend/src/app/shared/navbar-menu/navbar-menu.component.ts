@@ -5,9 +5,10 @@ import { AuthService } from 'src/app/services/auth.service';
 import { SessionService } from 'src/app/services/session.service';
 
 @Component({
-  selector: 'app-navbar-menu',
-  templateUrl: './navbar-menu.component.html',
-  styleUrl: './navbar-menu.component.scss'
+    selector: 'app-navbar-menu',
+    templateUrl: './navbar-menu.component.html',
+    styleUrl: './navbar-menu.component.scss',
+    standalone: false
 })
 export class NavbarMenuComponent implements OnInit {
   items: MenuItem[] | undefined;

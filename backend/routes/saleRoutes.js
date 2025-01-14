@@ -3,6 +3,7 @@ const router = express.Router();
 const {
     setDb,
     getAllSales,
+    getSaleById,
     createSale,
     updateSale,
     deleteSale
@@ -16,6 +17,8 @@ router.use((req, res, next) => {
   });
 
 router.get('/',authMiddleware, getAllSales);
+
+router.get('/:id',authMiddleware, getSaleById);
 
 router.post('/',authMiddleware, createSale);
 

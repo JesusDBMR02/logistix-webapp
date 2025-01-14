@@ -7,9 +7,10 @@ import { FirebaseStorageService } from 'src/app/services/firebaseStorage.service
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
-  selector: 'app-company',
-  templateUrl: './company.component.html',
-  styleUrl: './company.component.scss'
+    selector: 'app-company',
+    templateUrl: './company.component.html',
+    styleUrl: './company.component.scss',
+    standalone: false
 })
 export class CompanyComponent implements OnInit{
   loading: boolean  = false;
@@ -113,7 +114,7 @@ export class CompanyComponent implements OnInit{
 
   uploadFile(callback: (url: string) => void) {
     if (this.selectedFile) {
-      const folder = 'brands/img';
+      const folder = 'company/img';
       this.firebaseStorageService.uploadFile(this.selectedFile, folder).subscribe({
         next: (url: string) => {
           callback(url); 
