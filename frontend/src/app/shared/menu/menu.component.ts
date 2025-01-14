@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 
 @Component({
-  selector: 'app-menu',
-  templateUrl: './menu.component.html',
-  styleUrl: './menu.component.scss'
+    selector: 'app-menu',
+    templateUrl: './menu.component.html',
+    styleUrl: './menu.component.scss',
+    standalone: false
 })
 export class MenuComponent {
   items: MenuItem[] | undefined;

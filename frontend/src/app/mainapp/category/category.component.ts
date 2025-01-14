@@ -4,9 +4,10 @@ import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
 import { CategoryService } from 'src/app/services/category.service';
 
 @Component({
-  selector: 'app-category',
-  templateUrl: './category.component.html',
-  styleUrl: './category.component.scss'
+    selector: 'app-category',
+    templateUrl: './category.component.html',
+    styleUrl: './category.component.scss',
+    standalone: false
 })
 export class CategoryComponent implements OnInit {
   categories: any[] = [];

@@ -9,9 +9,10 @@ import { ProductService } from 'src/app/services/product.service';
 import { SupplierService } from 'src/app/services/supplier.service';
 
 @Component({
-  selector: 'app-product',
-  templateUrl: './product.component.html',
-  styleUrl: './product.component.scss'
+    selector: 'app-product',
+    templateUrl: './product.component.html',
+    styleUrl: './product.component.scss',
+    standalone: false
 })
 export class ProductComponent implements OnInit {
   categories:any[]=[];

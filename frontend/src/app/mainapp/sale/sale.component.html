@@ -7,13 +7,13 @@
             <div class="row mb-2 mx-2">
                 <button pButton type="button" icon="pi pi-plus" class="p-button mr-2" (click)="showDialogCreate()">
                 </button>
-                <p-dropdown [options]="sortOptions" (onChange)="onSortChange($event)" placeholder="Sort by">
+                <p-dropdown [options]="statusArray"  [(ngModel)]="selectedStatus" (onChange)="onSortChange($event)" placeholder="Sort by status">
                 </p-dropdown>
 
                 <span class="p-input-icon-left ml-2">
                     <i class="pi pi-search"></i>
                     <input pInputText type="text" placeholder="Search by name" [(ngModel)]="searchTerm"
-                        (input)="filterBrands()" />
+                        (input)="filterSale()" />
                 </span>
 
             </div>
@@ -57,7 +57,7 @@
                                 </div>
                                 <div class="flex align-items-end text-right">
                                     <button pButton type="button" icon="pi pi-file-pdf"
-                                        class=" p-button-danger p-button-rounded mr-2" (click)="showDialogUpdate(sale._id)">
+                                        class=" p-button-danger p-button-rounded mr-2" (click)="generatePDF(sale._id)">
                                     </button>
                                     <button pButton type="button" icon="pi pi-pencil"
                                         class=" p-button-warning p-button-rounded mr-2" (click)="showDialogUpdate(sale._id)">

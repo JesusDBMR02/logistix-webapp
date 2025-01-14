@@ -5,9 +5,10 @@ import { ProductService } from 'src/app/services/product.service';
 import { SupplierService } from 'src/app/services/supplier.service';
 
 @Component({
-  selector: 'app-supplier',
-  templateUrl: './supplier.component.html',
-  styleUrl: './supplier.component.scss'
+    selector: 'app-supplier',
+    templateUrl: './supplier.component.html',
+    styleUrl: './supplier.component.scss',
+    standalone: false
 })
 export class SupplierComponent implements OnInit {
   suppliers: any[] = [];

@@ -6,9 +6,10 @@ import { BrandService } from 'src/app/services/brand.service';
 import { FirebaseStorageService } from 'src/app/services/firebaseStorage.service';
 
 @Component({
-  selector: 'app-brand',
-  templateUrl: './brand.component.html',
-  styleUrl: './brand.component.scss'
+    selector: 'app-brand',
+    templateUrl: './brand.component.html',
+    styleUrl: './brand.component.scss',
+    standalone: false
 })
 export class BrandComponent implements OnInit {
   brands: any[] = [];

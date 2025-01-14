@@ -1,16 +1,16 @@
 import { ChangeDetectorRef, Component, OnInit, signal, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import jsPDF from 'jspdf';
 import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
 import { FileUpload } from 'primeng/fileupload';
-import { BrandService } from 'src/app/services/brand.service';
-import { FirebaseStorageService } from 'src/app/services/firebaseStorage.service';
 import { ProductService } from 'src/app/services/product.service';
 import { SaleService } from 'src/app/services/sale.service';
 
 @Component({
-  selector: 'app-sale',
-  templateUrl: './sale.component.html',
-  styleUrl: './sale.component.scss'
+    selector: 'app-sale',
+    templateUrl: './sale.component.html',
+    styleUrl: './sale.component.scss',
+    standalone: false
 })
 export class SaleComponent implements OnInit {
   sales: any[] = [];
@@ -22,12 +22,11 @@ export class SaleComponent implements OnInit {
   statusForm: FormGroup;
   visibleUpt: boolean = false;
   id:string = "";
+  selectedStatus: string='';
   status:string = "";
   loading: boolean = false;
   filteredSales: any[] = [];
   searchTerm: string = '';
-  selectedFile: File | null = null; 
-  logo: string = '';
   totalSale: number = 0; 
   sourceProducts:any[] = [];
   targetProducts:any[] = [];
@@ -53,7 +52,6 @@ export class SaleComponent implements OnInit {
     private productService: ProductService,
     private cdr: ChangeDetectorRef,
     private fb: FormBuilder,
-    private firebaseStorageService: FirebaseStorageService
 
   ) {
     this.createUptForm = this.fb.group({
@@ -104,7 +102,8 @@ export class SaleComponent implements OnInit {
     });
   }
 
-  getSaleById(id: String){
+  getSaleById(id: String): Promise<void>{
+    return new Promise<void>((resolve,reject) =>{
     this.saleService.getSaleById(id).subscribe({
       next: (response:any) => {
         this.createUptForm.patchValue({
@@ -117,39 +116,15 @@ export class SaleComponent implements OnInit {
         });
         this.id = response._id;
         this.targetProducts = response.products;
+        resolve(response);
       },
       error: (error) => {
         this.showToast('error','An error occurred'+ error);
       }
     });
+  });
   }
-  onFileSelected(event: any) {
-    const file = event.files[0]; 
-    if (file) {
-      this.selectedFile = file;
-      
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.logo = e.target.result; 
-      };
-      reader.readAsDataURL(file);
-    }  }
 
-  uploadFile(callback: (url: string) => void) {
-    if (this.selectedFile) {
-      const folder = 'brands/img';
-      this.firebaseStorageService.uploadFile(this.selectedFile, folder).subscribe({
-        next: (url: string) => {
-          callback(url); 
-        },
-        error: (error) => {
-          this.showToast('error', 'Failed to upload the file: ' + error);
-        }
-      });
-    } else {
-      callback(this.logo); 
-    }
-  }
   updateSale(id: string) {
     if (this.createUptForm.valid) {
       this.confirmationService.confirm({
@@ -242,8 +217,6 @@ export class SaleComponent implements OnInit {
     }
   }
 
-  
-
   showDialogCreate(){
     this.visible = true;
     this.createUptForm.reset();
@@ -257,20 +230,15 @@ export class SaleComponent implements OnInit {
     this.visibleUptStatus = true;
   }
   onSortChange(event: any) {
-    const value = event.value;
-
-    if (value.startsWith('!')) {
-      this.sortOrder = -1;
-      this.sortField = value.substring(1);
-    } else {
-      this.sortOrder = 1;
-      this.sortField = value;
+    let filtered = [...this.sales];
+    if (this.selectedStatus) {
+      filtered = filtered.filter(product => product.status === this.selectedStatus);
     }
-
-    this.sortBrands();
+    
+    this.filteredSales = filtered;
   }
 
-  sortBrands() {
+  sortSales() {
     this.sales.sort((a, b) => {
       const fieldA = a[this.sortField].toLowerCase();
       const fieldB = b[this.sortField].toLowerCase();
@@ -288,7 +256,7 @@ export class SaleComponent implements OnInit {
       life: 3000,
     });
   }
-  filterBrands(): void {
+  filterSale(): void {
     if (!this.searchTerm) {
       this.filteredSales = this.sales;
     } else {
@@ -298,12 +266,69 @@ export class SaleComponent implements OnInit {
       );
     }
   }
-  onMoveToTarget(event: any): void {
-    console.log('Moved to target:', event.items);
-  }
 
-  onMoveToSource(event: any): void {
-    console.log('Moved to source:', event.items);
+  generatePDF(id:String) {
+    this.getSaleById(id)
+    .then((response : any) => {
+      const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text('Sales Invoice', 10, 10);
+
+    doc.setFontSize(12);
+    doc.text('Name: '+response.name, 10, 20);
+    doc.text('Date: '+response.saleDate, 10, 30);
+    doc.text('Status: ' + response.status, 10, 40);
+    doc.text('Payment Method: '+response.paymentMethod, 10, 50);
+
+    let startY = 60;
+    doc.text('Products:', 10, startY);
+    startY += 10;
+
+    doc.setFont('helvetica', 'bold');
+    doc.text('Product', 10, startY);
+    doc.text('Price', 60, startY);
+    doc.text('Quantity', 80, startY);
+    doc.text('Discount', 110, startY);
+    doc.text('Tax', 135, startY);
+    doc.text('Total', 150, startY);
+    doc.setFont('helvetica', 'normal');
+
+    response.products.map((product:any) => {
+      startY += 10;
+      doc.text(product.name, 10, startY);
+      doc.text(product.salePrice + '€', 60, startY);
+      doc.text(product.stock + '', 80, startY);
+      doc.text(product.discount + '%', 110, startY);
+      doc.text(product.tax + '%', 135, startY);
+      doc.text(product.total + '€' , 150, startY);
+    });
+
+    startY += 20;
+    doc.setFontSize(14);
+    doc.text('Total Amount: '+response.totalAmount+ '€', 10, startY);
+
+    startY += 10;
+    doc.text('Notes: '+response.notes, 10, startY);
+    const pdfBlob = doc.output('blob');
+
+    const pdfUrl = URL.createObjectURL(pdfBlob);
+
+    const pdfWindow = window.open(pdfUrl, response.name);
+
+    if (pdfWindow) {
+      pdfWindow.onload = () => {
+        URL.revokeObjectURL(pdfUrl); 
+      };
+    } else {
+      this.showToast('error','The popup could not be opened.');
+      doc.save(`${response.name}.pdf`);
+    }
+  
+    })
+    .catch((error) => {
+      this.showToast('error','An error occurred:'+ error);    });
   }
+    
 }
 

@@ -7,10 +7,11 @@ import { SessionService } from 'src/app/services/session.service';
 
 
 @Component({
-  selector: 'app-sign-in',
-  templateUrl: './sign-in.component.html',
-  styleUrls: ['./sign-in.component.scss'],
-  providers: [MessageService], 
+    selector: 'app-sign-in',
+    templateUrl: './sign-in.component.html',
+    styleUrls: ['./sign-in.component.scss'],
+    providers: [MessageService],
+    standalone: false
 })
 export class SignInComponent implements OnInit {
   signInForm: FormGroup;
