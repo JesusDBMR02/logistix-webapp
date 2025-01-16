@@ -16,11 +16,34 @@ const getAllPurchases = async (req, res) => {
         res.status(500).json({ message: 'Error al obtener las compras.', error });
     }
 };
-
-const createPurchase = async (req, res) => {
-    const {supplierId, products, totalAmount, purchaseDate, status, notes } = req.body;   
+const getPurchaseById = async (req, res) => {
     try {
-        const purchase = new Purchase(supplierId, products, totalAmount, purchaseDate, status, notes);
+        const id = req.params.id;
+        const purchase = await db.findOne({ _id: new ObjectId(id) })
+        res.status(200).json(purchase);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al obtener la compra', error });
+    }
+};
+const createPurchase = async (req, res) => {
+    const {supplier, products, purchaseDate, paymentMethod, notes } = req.body;   
+    try {
+        const purchaseCount = await db.countDocuments(); 
+        const purchaseNumber = purchaseCount + 1;
+
+        const datePart = new Date().toISOString().split('T')[0];
+        const name = `Purchase_${purchaseNumber}_${datePart}`;
+        let totalAmount = 0;
+        for (const product of products) {
+            if (product.purchasePrice ) {
+                totalAmount += product.purchasePrice * product.quantity;
+            } else {
+                return res.status(400).json({ message: 'Todos los productos deben tener precio y cantidad' });
+            }
+        }
+        const status = "PENDING";
+        const purchase = new Purchase(name, supplier, products, totalAmount, paymentMethod, purchaseDate, status, notes);
         const result = await db.insertOne(purchase);
         if (!result.insertedId) {
             return res.status(500).json({ message: 'Error al insertar la compra' });
@@ -39,8 +62,18 @@ const updatePurchase = async (req, res) => {
     
     try {
         const id = req.params.id; 
-        const data = req.body; 
-
+        let data = req.body; 
+        let totalAmount = 0;
+        if(data.products !== undefined){
+            for (const product of data.products) {
+                if (product.purchasePrice ) {
+                    totalAmount += product.purchasePrice * product.quantity;
+                } else {
+                    return res.status(400).json({ message: 'Todos los productos deben tener precio y cantidad' });
+                }
+            } 
+            data = {...data, totalAmount: totalAmount};
+        }
         const result = await db.updateOne(
             { _id: new ObjectId(id) }, 
             { $set: data } 
@@ -71,4 +104,4 @@ const deletePurchase = async (req, res) => {
     }
 };
 
-module.exports = { setDb, getAllPurchases, createPurchase, updatePurchase, deletePurchase };
+module.exports = { setDb, getAllPurchases, getPurchaseById, createPurchase, updatePurchase, deletePurchase };

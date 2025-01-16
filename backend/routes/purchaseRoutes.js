@@ -5,7 +5,8 @@ const {
     getAllPurchases,
     createPurchase,
     updatePurchase,
-    deletePurchase
+    deletePurchase,
+    getPurchaseById
 } = require('../controllers/purchaseController');
 const authMiddleware = require('../middleware/authMiddleware');
 
@@ -16,6 +17,8 @@ router.use((req, res, next) => {
   });
 
 router.get('/',authMiddleware, getAllPurchases);
+
+router.get('/:id',authMiddleware, getPurchaseById);
 
 router.post('/',authMiddleware, createPurchase);
 

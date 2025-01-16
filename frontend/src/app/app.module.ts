@@ -27,6 +27,7 @@ import { SupplierComponent } from './mainapp/supplier/supplier.component';
 import { ProductComponent } from './mainapp/product/product.component';
 import { OrderListModule } from 'primeng/orderlist';
 import { SaleComponent } from './mainapp/sale/sale.component';
+import { PurchaseComponent } from './mainapp/purchase/purchase.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { SaleComponent } from './mainapp/sale/sale.component';
     SupplierComponent,
     ProductComponent,
     SaleComponent,
+    PurchaseComponent,
     SignUpComponent,
     NavbarMenuComponent,
     ConfirmEmailComponent,

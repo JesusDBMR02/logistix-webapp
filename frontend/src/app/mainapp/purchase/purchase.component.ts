@@ -4,16 +4,18 @@ import jsPDF from 'jspdf';
 import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
 import { FileUpload } from 'primeng/fileupload';
 import { ProductService } from 'src/app/services/product.service';
-import { SaleService } from 'src/app/services/sale.service';
+import { PurchaseService } from 'src/app/services/purchase.service';
+import { SupplierService } from 'src/app/services/supplier.service';
 
 @Component({
-    selector: 'app-sale',
-    templateUrl: './sale.component.html',
-    styleUrl: './sale.component.scss',
+    selector: 'app-purchase',
+    templateUrl: './purchase.component.html',
+    styleUrl: './purchase.component.scss',
     standalone: false
 })
-export class SaleComponent implements OnInit {
-  sales: any[] = [];
+export class PurchaseComponent implements OnInit {
+  suppliersArray: any[] = [];
+  purchases: any[] = [];
   sortOrder!: number;
   sortField!: string;
   sortOptions!: SelectItem[];
@@ -22,13 +24,14 @@ export class SaleComponent implements OnInit {
   statusForm: FormGroup;
   visibleUpt: boolean = false;
   id:string = "";
-  quantities: { [key: number]: number } = {}; 
   selectedStatus: string='';
+  selectedSupplier: string='';
   status:string = "";
   loading: boolean = false;
-  filteredSales: any[] = [];
+  filteredPurchases: any[] = [];
   searchTerm: string = '';
-  totalSale: number = 0; 
+  totalPurchase: number = 0; 
+  quantities: { [key: number]: number } = {}; 
   sourceProducts:any[] = [];
   targetProducts:any[] = [];
   statusArray:any[] = [
@@ -49,7 +52,8 @@ export class SaleComponent implements OnInit {
 
   constructor(private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private saleService: SaleService,
+    private purchaseService: PurchaseService,
+    private supplierService: SupplierService,
     private productService: ProductService,
     private cdr: ChangeDetectorRef,
     private fb: FormBuilder,
@@ -58,7 +62,7 @@ export class SaleComponent implements OnInit {
     this.createUptForm = this.fb.group({
       notes: ['',[Validators.required,]],
       paymentMethod: ['',[Validators.required,]],
-
+      idSupplier: ['',[Validators.required,]],
     });
     this.statusForm = this.fb.group({
       status: ['',[Validators.required,]],
@@ -66,19 +70,15 @@ export class SaleComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getSales();
-    this.getProducts();
-    this.sortOptions = [
-      { label: 'Name (A - Z)', value: 'name' },
-      { label: 'Name (Z - A)', value: '!name' },
-  ];
+    this.getPurchases();
+    this.getSuppliers();
   }
-  getSales(){
+  getPurchases(){
     this.loading = true;
-    this.saleService.getSales().subscribe({
+    this.purchaseService.getPurchases().subscribe({
       next: (data) => {
-        this.sales = data;
-        this.filteredSales = data;
+        this.purchases = data;
+        this.filteredPurchases = data;
         this.loading = false;
         this.cdr.detectChanges(); 
       },
@@ -88,12 +88,16 @@ export class SaleComponent implements OnInit {
     });
   }
 
-  getProducts(){
+  getSuppliers(){
     this.loading = true;
-    this.productService.getProducts().subscribe({
-      next: (data:any) => {
-        
-        this.sourceProducts = data.filter((product: any) => product.status != 'OUTSTOCK' );
+    this.supplierService.getSuppliers().subscribe({
+      next: (response:any) => {
+        response.map((supplier:any) =>{
+          this.suppliersArray.push({
+            label: supplier.name,
+            value: supplier._id
+          })
+        });
         this.loading = false;
         this.cdr.detectChanges(); 
       },
@@ -103,14 +107,15 @@ export class SaleComponent implements OnInit {
     });
   }
 
-  getSaleById(id: String): Promise<void>{
+  getPurchaseById(id: String): Promise<any>{
     return new Promise<void>((resolve,reject) =>{
-    this.saleService.getSaleById(id).subscribe({
+    this.purchaseService.getPurchaseById(id).subscribe({
       next: (response:any) => {
         this.createUptForm.patchValue({
           notes: response.notes,
           paymentMethod: response.paymentMethod,
-          
+          idSupplier: response.supplier._id,
+
         });
         this.statusForm.patchValue({
           status: response.status,
@@ -126,24 +131,38 @@ export class SaleComponent implements OnInit {
   });
   }
 
-  updateSale(id: string) {
+  getSupplierById(id: String): Promise<void>{
+    return new Promise<void>((resolve,reject) =>{
+    this.supplierService.getSupplierById(id).subscribe({
+      next: (response:any) => {
+        this.sourceProducts = response.suppliedProducts;
+        resolve(response);
+      },
+      error: (error) => {
+        this.showToast('error','An error occurred'+ error);
+      }
+    });
+  });
+  }
+
+  updatePurchase(id: string) {
     if (this.createUptForm.valid) {
       this.confirmationService.confirm({
-        message: 'Are you sure you want to edit this sale?',
+        message: 'Are you sure you want to edit this purchase?',
         header: 'Edit Confirmation',
         icon: 'pi pi-exclamation-circle',
         accept: () => {
           const selectedProductsWithQuantities = this.targetProducts.map(product => ({
             ...product,
             quantity: Number(this.quantities[product._id]) || 0,
-            totalAmount: product.total *  Number(this.quantities[product._id]) 
+            totalAmount: product.purchasePrice *  Number(this.quantities[product._id]) 
           }));
             const saleData = { ...this.createUptForm.value, products:selectedProductsWithQuantities };
-            this.saleService.updateSale(id, saleData).subscribe({
+            this.purchaseService.updatePurchase(id, saleData).subscribe({
               next: () => {
-                this.showToast('success', 'The sale updated successfully');
+                this.showToast('success', 'The purchase updated successfully');
                 this.visibleUpt = false
-                this.getSales();
+                this.getPurchases();
               },
               error: (error: any) => {
                 this.showToast('error', 'An error occurred: ' + error);
@@ -158,22 +177,23 @@ export class SaleComponent implements OnInit {
   }
   updateStatus(id: string) {
     if (this.statusForm.valid) {
+      
       this.confirmationService.confirm({
         message: 'Are you sure you want to edit this status?',
         header: 'Edit Confirmation',
         icon: 'pi pi-exclamation-circle',
         accept: () => {
-            this.saleService.updateSale(id, this.statusForm.value).subscribe({
+            this.purchaseService.updatePurchase(id, this.statusForm.value).subscribe({
               next: () => {
                 if (this.statusForm.get('status')?.value === 'COMPLETED') {
-                  this.getSaleById(id).then((response:any) => {
+                  this.getPurchaseById(id).then((response:any) => {
                     response.products.map((product:any) => {
-                      let stockActualizado = product.stock - product.quantity;
+                      let stockActualizado = product.stock + product.quantity;
                       this.productService.updateProduct(product._id, {stock: stockActualizado}).subscribe(
                         (response:any) => {
                           this.showToast('success', 'The status updated successfully');
                           this.visibleUptStatus = false
-                          this.getSales();
+                          this.getPurchases();
                         }, (error):any =>{
                           this.showToast('error', 'Failed to update stock'+ error.message);
                       });
@@ -183,9 +203,8 @@ export class SaleComponent implements OnInit {
                 else{
                   this.showToast('success', 'The status updated successfully');
                   this.visibleUptStatus = false
-                  this.getSales();
+                  this.getPurchases();
                 }
-                
               },
               error: (error: any) => {
                 this.showToast('error', 'An error occurred: ' + error);
@@ -205,10 +224,10 @@ export class SaleComponent implements OnInit {
       header: 'Delete Confirmation',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.saleService.deleteSale(id).subscribe({
+        this.purchaseService.deletePurchase(id).subscribe({
           next: () => {
             this.showToast('success', 'Brand deleted successfully');
-            this.getSales();
+            this.getPurchases();
           },
           error: (error: any) => {
             this.showToast('error', 'An error occurred: ' + error);
@@ -218,55 +237,71 @@ export class SaleComponent implements OnInit {
     });
   }
     
-  createSale() {
+  createPurchase() {
     const saleDate = new Date();
     const isoDate = saleDate.toISOString();
     const formattedDate = isoDate.substring(0, 19).replace("T", " "); 
+
     if (this.createUptForm.valid) {
       const selectedProductsWithQuantities = this.targetProducts.map(product => ({
         ...product,
         quantity: Number(this.quantities[product._id]) || 0,
-        totalAmount: product.total *  Number(this.quantities[product._id]) 
-      }));
-        const saleData = { ...this.createUptForm.value, products:selectedProductsWithQuantities, saleDate:formattedDate };
-        this.saleService.createSale(saleData).subscribe({
+        totalAmount: product.purchasePrice *  Number(this.quantities[product._id]) 
+    }));
+      this.getSupplierById(this.createUptForm.get('idSupplier')?.value).then((response) =>{
+        const saleData = { notes:this.createUptForm.get('notes')?.value,paymentMethod: this.createUptForm.get('paymentMethod')?.value, products:selectedProductsWithQuantities, supplier:response , purchaseDate:formattedDate };
+        this.purchaseService.createPurchase(saleData).subscribe({
           next: (response:any) => {
             console.log(response);
-            this.showToast('success', 'New sale added successfully');
-            this.visible=false;
-            this.getSales();
+            this.showToast('success', 'New purchase added successfully');
+            location.reload();
           },
           error: (error) => {
             this.showToast('error', 'An error occurred: ' + error);
           }
-        });
+        });      });
+        
     } else {
       this.showToast('warn', 'The form is invalid');
     }
   }
-
+  onSuppliersChange(event:any){
+    this.loading = true;
+    this.getSupplierById(event.value).then((response) =>{
+      this.loading = false;
+    });
+  }
   showDialogCreate(){
     this.visible = true;
     this.createUptForm.reset();
   }
   showDialogUpdate(id:String){
-    this.getSaleById(id);
-    this.visibleUpt = true;
+    this.getPurchaseById(id).then((response) =>{
+      this.getSupplierById(response.supplier._id).then((response) =>{
+        this.visibleUpt = true;
+      }).catch((error) => {
+        this.showToast('error', 'An error occurred: ' + error);
+      });
+    }).catch((error) => {
+      this.showToast('error', 'An error occurred: ' + error);
+    });
   }
   showDialogUpdateStatus(id:String){
-    this.getSaleById(id);
+    this.getPurchaseById(id);
     this.visibleUptStatus = true;
   }
   onSortChange(event: any) {
-    let filtered = [...this.sales];
+    let filtered = [...this.purchases];
     if (this.selectedStatus) {
-      filtered = filtered.filter(product => product.status === this.selectedStatus);
+      filtered = filtered.filter(purchase => purchase.status === this.selectedStatus);
+    }
+    if (this.selectedSupplier) {
+      filtered = filtered.filter(purchase => purchase.supplier._id === this.selectedSupplier);
     }
     
-    this.filteredSales = filtered;
+    this.filteredPurchases = filtered;
   }
 
-  
   showToast(severity: 'success' | 'info' | 'warn' | 'error', detail: string): void {
     this.messageService.add({
       severity: severity,
@@ -277,15 +312,21 @@ export class SaleComponent implements OnInit {
   }
   filterSale(): void {
     if (!this.searchTerm) {
-      this.filteredSales = this.sales;
+      this.filteredPurchases = this.purchases;
     } else {
       const lowerSearch = this.searchTerm.toLowerCase();
-      this.filteredSales = this.sales.filter(sale =>
-        sale.name.toLowerCase().includes(lowerSearch)
+      this.filteredPurchases = this.purchases.filter(purchase =>
+        purchase.name.toLowerCase().includes(lowerSearch)
       );
     }
   }
-  addCuantityToProduct(event:any, product: any){
+clearFilters(){
+  this.selectedStatus = "";
+  this.selectedSupplier = "";
+  this.filteredPurchases = [...this.purchases]; 
+  this.searchTerm = ''; 
+}
+addCuantityToProduct(event:any, product: any){
   this.quantities[product._id] = event.target.value;
 }
 initializeQuantities(event:any){
@@ -295,22 +336,17 @@ initializeQuantities(event:any){
     }
 });
 }
-  clearFilters(){
-    this.selectedStatus = "";
-    this.filteredSales = [...this.sales]; 
-    this.searchTerm = ''; 
-  }
   generatePDF(id:String) {
-    this.getSaleById(id)
+    this.getPurchaseById(id)
     .then((response : any) => {
       const doc = new jsPDF();
 
     doc.setFontSize(18);
-    doc.text('Sale Invoice', 10, 10);
+    doc.text('Purchase Invoice', 10, 10);
 
     doc.setFontSize(12);
     doc.text('Name: '+response.name, 10, 20);
-    doc.text('Date: '+response.saleDate, 10, 30);
+    doc.text('Date: '+response.purchaseDate, 10, 30);
     doc.text('Status: ' + response.status, 10, 40);
     doc.text('Payment Method: '+response.paymentMethod, 10, 50);
 
@@ -320,21 +356,17 @@ initializeQuantities(event:any){
 
     doc.setFont('helvetica', 'bold');
     doc.text('Product', 10, startY);
-    doc.text('Price', 80, startY);
-    doc.text('Quantity', 110, startY);
-    doc.text('Discount', 130, startY);
-    doc.text('Tax', 155, startY);
-    doc.text('Total', 170, startY);
+    doc.text('Price', 70, startY);
+    doc.text('Quantity', 100, startY);
+    doc.text('Total', 150, startY);
     doc.setFont('helvetica', 'normal');
 
     response.products.map((product:any) => {
       startY += 10;
       doc.text(product.name, 10, startY);
-      doc.text(product.salePrice + '€', 80, startY);
-      doc.text(product.quantity + '', 110, startY);
-      doc.text(product.discount + '%', 130, startY);
-      doc.text(product.tax + '%', 155, startY);
-      doc.text(product.totalAmount + '€' , 170, startY);
+      doc.text(product.purchasePrice + '€', 70, startY);
+      doc.text(product.quantity + '', 100, startY);
+      doc.text(product.totalAmount + '€' , 150, startY);
     });
 
     startY += 20;
