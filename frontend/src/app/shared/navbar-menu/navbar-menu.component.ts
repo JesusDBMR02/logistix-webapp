@@ -26,10 +26,10 @@ export class NavbarMenuComponent implements OnInit {
         routerLink: 'company'
       },
 
-      {
-        label: 'Contact',
-        icon: 'pi pi-envelope',
-      },
+      //{
+      //  label: 'Contact',
+      //  icon: 'pi pi-envelope',
+      //},
       {
         label: 'Sign-Out',
         icon: 'pi pi-sign-out',

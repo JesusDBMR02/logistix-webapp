@@ -37,7 +37,7 @@ const createSale = async (req, res) => {
         let totalAmount = 0;
         for (const product of products) {
             if (product.total ) {
-                totalAmount += product.total;
+                totalAmount += product.total * product.quantity;
             } else {
                 return res.status(400).json({ message: 'Todos los productos deben tener precio y cantidad' });
             }
@@ -67,7 +67,7 @@ const updateSale = async (req, res) => {
         if(data.products !== undefined){
             for (const product of data.products) {
                 if (product.total ) {
-                    totalAmount += product.total;
+                    totalAmount += product.total * product.quantity;
                 } else {
                     return res.status(400).json({ message: 'Todos los productos deben tener precio y cantidad' });
                 }

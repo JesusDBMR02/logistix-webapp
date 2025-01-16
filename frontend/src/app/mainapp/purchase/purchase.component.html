@@ -3,48 +3,52 @@
         <p-progressSpinner ariaLabel="loading" />
     </div>
     <div class="col-12">
-        <p-card header="Sales">
+        <p-card header="Purchases">
             <div class="row mb-2 mx-2">
                 <button pButton type="button" icon="pi pi-plus" class="p-button mr-2" (click)="showDialogCreate()">
                 </button>
                 <p-dropdown [options]="statusArray"  [(ngModel)]="selectedStatus" (onChange)="onSortChange($event)" placeholder="Sort by status">
                 </p-dropdown>
-                
-                <button pButton icon="pi pi-times" class="p-button-danger ml-2" (click)="clearFilters()"></button>
-
+                <p-dropdown [options]="suppliersArray" class="ml-2" [(ngModel)]="selectedSupplier" (onChange)="onSortChange($event)"
+                placeholder="Sort by supplier">
+            </p-dropdown>
+            <button pButton icon="pi pi-times" class="p-button-danger ml-2" (click)="clearFilters()"></button>
                 <span class="p-input-icon-left ml-2">
                     <i class="pi pi-search"></i>
                     <input pInputText type="text" placeholder="Search by name" [(ngModel)]="searchTerm"
                         (input)="filterSale()" />
                 </span>
+
             </div>
             <div class="h-40rem overflow-y-scroll">
-                <p-dataView [value]="filteredSales" [rows]="5" [paginator]="true" [sortField]="sortField"
+                <p-dataView [value]="filteredPurchases" [rows]="5" [paginator]="true" [sortField]="sortField"
                     [sortOrder]="sortOrder">
-                    <ng-template let-sales pTemplate="list">
-                        <div *ngFor="let sale of sales; let first = first" class="p-dataview-list">
+                    <ng-template let-purchases pTemplate="list">
+                        <div *ngFor="let purchase of purchases; let first = first" class="p-dataview-list">
                             <div
                                 class="flex flex-col sm:flex-row sm:items-center p-3 mx-2 my-3 gap-4 border-round  bg-cyan-200 shadow-2">
                                 
                                 <div class="flex flex-col md:flex-row flex-1 gap-6">
                                     <div class="flex flex-row md:flex-col gap-2">
                                         <div>
-                                            <h2>{{ sale.name }}</h2>
+                                            <h2>{{ purchase.name }}</h2>
                                             <div class=" mb-2 text-surface-900 dark:text-surface-0 mt-2 text-sm">
-                                                {{ sale.saleDate }}</div>
-                                                
+                                                {{ purchase.purchaseDate }}</div>
+                                            <div class=" mb-2 text-surface-900 dark:text-surface-0 mt-2 text-sm">
+                                                {{ purchase.supplier.name }}</div>
+                                            
                                         </div>
                                     </div>
                                 </div>
                                 <div class="flex flex-col md:flex-row align-items-center flex-1 gap-6">
                                     <div class="flex flex-row md:flex-col justify-between items-start gap-2">
                                         <div>
-                                            <span class="font-semibold text-lg">Payment Method:{{ sale.paymentMethod }}</span>
+                                            <span class="font-semibold text-lg">Payment Method:{{ purchase.paymentMethod }}</span>
                                             
                                             <div class=" font-medium text-surface-900 dark:text-surface-0 mt-2 text-sm">
-                                                <p-tag (click)="showDialogUpdateStatus(sale._id)" [severity]="
-                                                sale.status === 'COMPLETED' ? 'success' : sale.status==='PENDING' ? 'warning' : 'danger'
-                                                " [value]="sale.status" />
+                                                <p-tag (click)="showDialogUpdateStatus(purchase._id)" [severity]="
+                                                purchase.status === 'COMPLETED' ? 'success' : purchase.status==='PENDING' ? 'warning' : 'danger'
+                                                " [value]="purchase.status" />
                                             </div>
                                         </div>
                                     </div>
@@ -52,19 +56,19 @@
                                 <div class="flex flex-col md:flex-row align-items-end text-right md:items-center flex-1 gap-6">
                                     <div class="flex flex-row md:flex-col justify-between items-start gap-2">
                                         <div>
-                                            <h2>Total: {{sale.totalAmount | currency: 'EUR'}}</h2>
+                                            <h2>Total: {{purchase.totalAmount | currency: 'EUR'}}</h2>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="flex align-items-end text-right">
                                     <button pButton type="button" icon="pi pi-file-pdf"
-                                        class=" p-button-danger p-button-rounded mr-2" (click)="generatePDF(sale._id)">
+                                        class=" p-button-danger p-button-rounded mr-2" (click)="generatePDF(purchase._id)">
                                     </button>
                                     <button pButton type="button" icon="pi pi-pencil"
-                                        class=" p-button-warning p-button-rounded mr-2" (click)="showDialogUpdate(sale._id)">
+                                        class=" p-button-warning p-button-rounded mr-2" (click)="showDialogUpdate(purchase._id)">
                                     </button>
                                     <button pButton type="button" icon="pi pi-trash"
-                                        class="p-button-rounded p-button-danger" (click)="deleteBrand(sale._id)">
+                                        class="p-button-rounded p-button-danger" (click)="deleteBrand(purchase._id)">
                                     </button>
                                 </div>
                             </div>
@@ -72,7 +76,7 @@
                     </ng-template>
 
                     <ng-template pTemplate="empty">
-                        <p>No sales available</p>
+                        <p>No purchases available</p>
                     </ng-template>
                 </p-dataView>
             </div>
@@ -99,9 +103,9 @@
             </div>
         </ng-template>
     </p-confirmDialog>
-    <p-dialog header="Create Sale" [modal]="true" [(visible)]="visible" [style]="{ width: '70rem' }">
-        <form [formGroup]="createUptForm" (ngSubmit)="createSale()">
-            <span class="p-text-secondary block mb-3">Create a new sale</span>
+    <p-dialog header="Create Purchase" [modal]="true" [(visible)]="visible" [style]="{ width: '70rem' }">
+        <form [formGroup]="createUptForm" (ngSubmit)="createPurchase()">
+            <span class="p-text-secondary block mb-3">Create a new purchase</span>
             <div class="row flex">
                 <div class="col-6 mb-3">
                     <textarea rows="5" styleClass="w-full mb-3" cols="34" pInputTextarea formControlName="notes"
@@ -109,6 +113,8 @@
                 </div>
                 <div class=" col-6 mb-3">
                     <p-dropdown styleClass="w-full mb-3" [options]="paymentMethod" formControlName="paymentMethod" placeholder="Payment Method">
+                    </p-dropdown>
+                    <p-dropdown styleClass="w-full mb-3" [options]="suppliersArray" formControlName="idSupplier" (onChange)="onSuppliersChange($event)" placeholder="Suppliers">
                     </p-dropdown>
                 
                 </div>
@@ -125,7 +131,72 @@
                 [targetStyle]="{ height: '20rem' }"
                 breakpoint="1400px"
                 (onMoveToTarget)="initializeQuantities($event)">
+                
+                    <ng-template let-product pTemplate="item">
+                        <div class="flex flex-wrap p-2 align-items-center gap-3">
+                            <img 
+                                class="w-4rem shadow-2 flex-shrink-0 border-round" 
+                                src="{{ product.img }}" 
+                                alt="{{product.name}}" />
+                            <div class="flex-1 flex flex-column gap-2">
+                                <span class="font-bold">{{ product.name }}</span>
+                                <div class="flex align-items-center gap-2">
+                                    <i class="pi pi-tag text-sm"></i>
+                                    <span>
+                                        {{ product.category.name }} - {{product.brand.name}}
+                                    </span>
+                                    <p-inputNumber [(ngModel)]="quantities[product.id]"
+                                    [ngModelOptions]="{standalone: true}"  
+                                    [min]="0" 
+                                    [max]="100" 
+                                    (onBlur)="addCuantityToProduct($event, product)"
+                                    inputId="quantity" 
+                                    [style]="{ width: '5rem' }" />
+                                </div>
+                            </div>
+                            <span class="font-bold text-900">
+                                {{product.purchasePrice | currency:'EUR' }}
+                            </span>
+                        </div>
+                    </ng-template>
+            </p-pickList>
+            </div>
+
+            <div class="flex justify-content-between gap-2">
+                <p-button label="Cancel" severity="secondary" (click)="visible = false" />
+                <p-button label="Save" type="submit" />
+            </div>
+        </form>
+    </p-dialog>
+    <p-dialog header="Update Purchase" [modal]="true" [(visible)]="visibleUpt" [style]="{ width: '70rem' }">
+        <form [formGroup]="createUptForm" (ngSubmit)="updatePurchase(id)">
+            <span class="p-text-secondary block mb-3">Edit purchase</span>
+            <div class="row flex">
+                <div class="col-6 mb-3">
+                    <textarea rows="5" styleClass="w-full mb-3" cols="34" pInputTextarea formControlName="notes"
+                        placeholder="Notes"></textarea>
+                </div>
+                <div class=" col-6 mb-3">
+                    <p-dropdown styleClass="w-full mb-3" [options]="paymentMethod" formControlName="paymentMethod" placeholder="Payment Method">
+                    </p-dropdown>
+                    <p-dropdown styleClass="w-full mb-3" [options]="suppliersArray" formControlName="idSupplier" placeholder="Suppliers">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="row">
+                <p-pickList 
+                [source]="sourceProducts" 
+                [target]="targetProducts" 
+                sourceHeader="Available" 
+                targetHeader="Selected" 
+                [dragdrop]="true" 
+                [responsive]="true" 
+                [sourceStyle]="{ height: '20rem' }"
+                [targetStyle]="{ height: '20rem' }"
+                breakpoint="1400px"
+                (onMoveToTarget)="initializeQuantities($event)">
                 >
+                
                     <ng-template let-product pTemplate="item">
                         <div class="flex flex-wrap p-2 align-items-center gap-3">
                             <img 
@@ -146,73 +217,11 @@
                                     (onBlur)="addCuantityToProduct($event, product)"
                                     inputId="quantity" 
                                     [style]="{ width: '5rem' }" />
+                                    
                                 </div>
                             </div>
                             <span class="font-bold text-900">
-                                {{product.total | currency:'EUR' }}
-                            </span>
-                        </div>
-                    </ng-template>
-            </p-pickList>
-            </div>
-
-            <div class="flex justify-content-between gap-2">
-                <p-button label="Cancel" severity="secondary" (click)="visible = false" />
-                <p-button label="Save" type="submit" />
-            </div>
-        </form>
-    </p-dialog>
-    <p-dialog header="Update sale" [modal]="true" [(visible)]="visibleUpt" [style]="{ width: '70rem' }">
-        <form [formGroup]="createUptForm" (ngSubmit)="updateSale(id)">
-            <span class="p-text-secondary block mb-3">Edit sale</span>
-            <div class="row flex">
-                <div class="col-6 mb-3">
-                    <textarea rows="5" styleClass="w-full mb-3" cols="34" pInputTextarea formControlName="notes"
-                        placeholder="Notes"></textarea>
-                </div>
-                <div class=" col-6 mb-3">
-                    <p-dropdown styleClass="w-full mb-3" [options]="paymentMethod" formControlName="paymentMethod" placeholder="Payment Method">
-                    </p-dropdown>
-                
-                </div>
-            </div>
-            <div class="row">
-                <p-pickList 
-                [source]="sourceProducts" 
-                [target]="targetProducts" 
-                sourceHeader="Available" 
-                targetHeader="Selected" 
-                [dragdrop]="true" 
-                [responsive]="true" 
-                [sourceStyle]="{ height: '20rem' }"
-                [targetStyle]="{ height: '20rem' }"
-                breakpoint="1400px"
-                (onMoveToTarget)="initializeQuantities($event)">
-                >
-                    <ng-template let-product pTemplate="item">
-                        <div class="flex flex-wrap p-2 align-items-center gap-3">
-                            <img 
-                                class="w-4rem shadow-2 flex-shrink-0 border-round" 
-                                src="{{ product.img }}" 
-                                alt="{{product.name}}" />
-                            <div class="flex-1 flex flex-column gap-2">
-                                <span class="font-bold">{{ product.name }}</span>
-                                <div class="flex align-items-center gap-2">
-                                    <i class="pi pi-tag text-sm"></i>
-                                    <span>
-                                        {{ product.category.name }} - {{product.brand.name}}
-                                    </span>
-                                    <p-inputNumber [(ngModel)]="quantities[product.id]"
-                                    [ngModelOptions]="{standalone: true}" 
-                                    [min]="0" 
-                                    [max]="100" 
-                                    (onBlur)="addCuantityToProduct($event, product)"
-                                    inputId="quantity" 
-                                    [style]="{ width: '5rem' }" />
-                                </div>
-                            </div>
-                            <span class="font-bold text-900">
-                                {{product.total | currency:'EUR' }}
+                                {{product.purchasePrice | currency:'EUR' }}
                             </span>
                         </div>
                     </ng-template>
