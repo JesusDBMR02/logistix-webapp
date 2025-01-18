@@ -1,10 +1,117 @@
 <div class="row">
-    <div class="col-12">
-        <p-card header="Simple Card">
-            <p class="m-0">
-                Lorem ipsum dolor sit amet...
-            </p>
-        </p-card>        
-        
-    </div>
+  <div class="col-12 h-40rem  overflow-y-scroll">
+    <p-card [header]="'Wellcome to LogistiX ' + userEmail" >
+      <div class="row">
+        <div class="col-12 text-center shadow-3 bg-cyan-200 border-round">
+            <h3> <span class="text-red-500">OUTSTOCK</span>  Products</h3>
+          <p-carousel
+            [value]="products"
+            [numVisible]="3"
+            [numScroll]="3"
+            [circular]="false"
+            [responsiveOptions]="responsiveOptions">
+          >
+            <ng-template let-products pTemplate="item">
+                <div class="row ">
+                    <div class=" shadow-2 bg-green-200  border-round m-2 p-3">
+                        <div class="mb-3">
+                          <div class="relative mx-auto">
+                            <img
+                              src="{{products.img}}"
+                              width="150px"
+                              height="150px"
+                              [alt]="products.name"
+                              class="border-round"
+                            />
+                            <br>
+                            <p-tag
+                              [value]="products.status"
+                              [severity]="products.status === 'INSTOCK' ? 'success' : products.status==='LOWSTOCK' ? 'warning' : 'danger'"
+                              class="relative"
+                              
+                            />
+                          </div>
+                        </div>
+                        <div class="mb-3 font-medium">
+                          {{ products.name }}
+                        </div>
+                        <div class="mb-3 font-medium">
+                            {{ products.category.name }}-{{products.brand.name}}
+                          </div>
+                       
+                          <div class="mt-0 font-semibold text-right text-xl">
+                            {{ products.total | currency: 'EUR' }}
+                          </div>
+                        
+                      </div>
+                </div>
+              
+            </ng-template>
+          </p-carousel>
+        </div>
+      </div>
+      <div class="row lg:flex">
+        <div class="col-12 lg:col-6 mr-2  mt-4 text-center shadow-3 bg-cyan-200 border-round">
+            <h3>Last Week Completed Sales</h3>
+            <div class="row h-25rem  overflow-y-scroll">
+              <div *ngFor="let sale of sales" class=" shadow-2 bg-teal-200  border-round m-2 p-3">
+                  <div class="mb-3">
+                    <div class="relative mx-auto">
+                      <h4>{{sale.name}}</h4>
+                      <br>
+                      <p-tag
+                        [value]="sale.status"
+                        [severity]="sale.status === 'INSTOCK' ? 'success' : sale.status==='LOWSTOCK' ? 'warning' : 'danger'"
+                        class="relative"
+                        
+                      />
+                    </div>
+                  </div>
+                  <div class="mb-3 font-medium">
+                    {{ sale.saleDate }}
+                  </div>
+                  <div class="mb-3 font-medium">
+                       Payment Method: {{sale.paymentMethod }}
+                    </div>
+                 
+                    <div class="mt-0 font-semibold text-right text-xl">
+                      {{ sale.totalAmount | currency: 'EUR' }}
+                    </div>
+                  
+                </div>
+          </div>
+        </div>
+        <div class="col-12 lg:col-6  mt-4 mr-3 text-center shadow-3 bg-teal-200 border-round">
+            <h3>Last Week Completed Purchases</h3>
+            <div class="row  h-25rem  overflow-y-scroll">
+              <div *ngFor="let purchase of purchases" class=" shadow-2 bg-cyan-200  border-round m-2 p-3">
+                  <div class="mb-3">
+                    <div class="relative mx-auto">
+                      <h4>{{purchase.name}}</h4>
+                      <br>
+                      <p-tag
+                        [value]="purchase.status"
+                        [severity]="purchase.status === 'INSTOCK' ? 'success' : purchase.status==='LOWSTOCK' ? 'warning' : 'danger'"
+                        class="relative"
+                        
+                      />
+                    </div>
+                  </div>
+                  <div class="mb-3 font-medium">
+                    {{ purchase.purchaseDate }}
+                  </div>
+                  <div class="mb-3 font-medium">
+                       Payment Method: {{purchase.paymentMethod }}
+                    </div>
+                 
+                    <div class="mt-0 font-semibold text-right text-xl">
+                      {{ purchase.totalAmount | currency: 'EUR' }}
+                    </div>
+                  
+                </div>
+          </div>
+        </div>
+      </div>
+    </p-card>
+  </div>
 </div>

@@ -87,15 +87,16 @@ const updateProduct = async (req, res) => {
             const supplier = await dbSuppliers.findOne({ _id: new ObjectId(data.supplierId) });
             data = {...data, total, category, supplier, brand };
             updateSuppliedProducts(supplierId,id ); 
-            if (result.matchedCount === 0) {
-                return res.status(404).json({ message: "Producto no encontrado" });
-            }
+            
         }
         const result = await db.updateOne(
             { _id: new ObjectId(id) }, 
             { $set: data } 
         )
         
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ message: "Producto no encontrado" });
+        }
 
         const updatedProduct = await db.findOne({ _id: new ObjectId(id) });
         res.json(updatedProduct);

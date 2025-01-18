@@ -27,7 +27,7 @@ export class MenuComponent {
         label: 'Brands & Categories',
         items: [
           { label: 'Brands', icon: 'pi pi-bookmark', routerLink: 'brand' },
-          { label: 'Categories', icon: 'pi pi-bookmark-fill', routerLink: 'category' },
+          { label: 'Categories', icon: 'pi pi-tag', routerLink: 'category' },
         ]
       },
       { label: 'Suppliers',
