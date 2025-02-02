@@ -99,10 +99,12 @@ export class SupplierComponent implements OnInit {
           address: response.address
           
         });
-        console.log(response); // Agrega este log para inspeccionar la respuesta
-        response.suppliedProducts.map((product:any) =>{
-          this.products.push(product);
-        })
+        if(response.suppliedProducts) {
+          response.suppliedProducts.map((product:any) =>{
+            this.products.push(product);
+          })
+        }
+        
         this.products;
         this.id = response._id;
         this.status = response.status;

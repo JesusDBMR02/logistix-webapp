@@ -78,6 +78,7 @@ export class PurchaseComponent implements OnInit {
     this.purchaseService.getPurchases().subscribe({
       next: (data) => {
         this.purchases = data;
+        console.log(this.purchases);
         this.filteredPurchases = data;
         this.loading = false;
         this.cdr.detectChanges(); 

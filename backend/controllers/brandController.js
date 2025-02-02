@@ -10,7 +10,7 @@ const setDb = (database) => {
 
 const getAllBrands = async (req, res) => {
     try {
-        const brands = await db.find().toArray();
+        const brands = await db.find({ userId: req.user.uid }).toArray();
         res.status(200).json(brands);
     } catch (error) {
         console.error(error);
@@ -20,7 +20,7 @@ const getAllBrands = async (req, res) => {
 const getBrandById = async (req, res) => {
     try {
         const id = req.params.id;
-        const brand = await db.findOne({ _id: new ObjectId(id) })
+        const brand = await db.findOne({ _id: new ObjectId(id), userId: req.user.uid  })
         res.status(200).json(brand);
     } catch (error) {
         console.error(error);
@@ -32,7 +32,12 @@ const createBrand = async (req, res) => {
     try {
 
         const brand = new Brand(name, description, logo );
-        const result = await db.insertOne(brand);
+        const result = await db.insertOne({
+            userId: req.user.uid,
+            name,
+            description,
+            logo
+        });
         if (!result.insertedId) {
             return res.status(500).json({ message: 'Error al insertar la categoría' });
         }
@@ -53,14 +58,14 @@ const updateBrand = async (req, res) => {
         const data = req.body; 
 
         const result = await db.updateOne(
-            { _id: new ObjectId(id) }, 
+            { _id: new ObjectId(id), userId: req.user.uid }, 
             { $set: data } 
         )
         if (result.matchedCount === 0) {
             return res.status(404).json({ message: "Marca no encontrada" });
         }
 
-        const updatedBrand = await db.findOne({ _id: new ObjectId(id) });
+        const updatedBrand = await db.findOne({ _id: new ObjectId(id),userId: req.user.uid  });
         res.json(updatedBrand);
     } catch (error) {
         console.error("Error al actualizar la marca:", error);
@@ -71,7 +76,7 @@ const updateBrand = async (req, res) => {
 const deleteBrand = async (req, res) => {
     try {
         const id = req.params.id;
-        const result = await db.deleteOne({ _id: new ObjectId(id) });
+        const result = await db.deleteOne({ _id: new ObjectId(id), userId: req.user.uid  });
         if (result.deletedCount === 0) {
             return res.status(404).json({ message: "Marca no encontrada" });
         }

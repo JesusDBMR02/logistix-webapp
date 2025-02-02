@@ -9,7 +9,7 @@ const setDb = (database) => {
 
 const getAllPurchases = async (req, res) => {
     try {
-        const purchases = await db.find().toArray();
+        const purchases = await db.find({userId: req.user.uid}).toArray();
         res.status(200).json(purchases);
     } catch (error) {
         console.error(error);
@@ -19,7 +19,7 @@ const getAllPurchases = async (req, res) => {
 const getPurchaseById = async (req, res) => {
     try {
         const id = req.params.id;
-        const purchase = await db.findOne({ _id: new ObjectId(id) })
+        const purchase = await db.findOne({ _id: new ObjectId(id),userId: req.user.uid })
         res.status(200).json(purchase);
     } catch (error) {
         console.error(error);
@@ -44,7 +44,17 @@ const createPurchase = async (req, res) => {
         }
         const status = "PENDING";
         const purchase = new Purchase(name, supplier, products, totalAmount, paymentMethod, purchaseDate, status, notes);
-        const result = await db.insertOne(purchase);
+        const result = await db.insertOne({
+            userId: req.user.uid,
+            name,
+            purchaseDate,
+            paymentMethod,
+            notes,
+            totalAmount,
+            status,
+            products,
+            supplier
+    });
         if (!result.insertedId) {
             return res.status(500).json({ message: 'Error al insertar la compra' });
         }
@@ -75,14 +85,14 @@ const updatePurchase = async (req, res) => {
             data = {...data, totalAmount: totalAmount};
         }
         const result = await db.updateOne(
-            { _id: new ObjectId(id) }, 
+            { _id: new ObjectId(id),userId: req.user.uid }, 
             { $set: data } 
         )
         if (result.matchedCount === 0) {
             return res.status(404).json({ message: "Compra no encontrada" });
         }
 
-        const updatedPurchase = await db.findOne({ _id: new ObjectId(id) });
+        const updatedPurchase = await db.findOne({ _id: new ObjectId(id),userId: req.user.uid });
         res.json(updatedPurchase);
     } catch (error) {
         console.error("Error al actualizar la compra:", error);
@@ -93,7 +103,7 @@ const updatePurchase = async (req, res) => {
 const deletePurchase = async (req, res) => {
     try {
         const purchaseId = req.params.id;
-        const result = await db.deleteOne({ _id: new ObjectId(purchaseId) });
+        const result = await db.deleteOne({ _id: new ObjectId(purchaseId),userId: req.user.uid });
         if (result.deletedCount === 0) {
             return res.status(404).json({ message: "Compra no encontrada" });
         }

@@ -46,8 +46,9 @@ export class CategoryComponent implements OnInit {
   getCategories(){
     this.loading = true;
     this.categoryService.getCategories().subscribe({
-      next: (data) => {
+      next: (data:any) => {
         this.categories = data;
+        console.log(this.categories)
         this.filteredCategories = data;
         this.loading = false;
         this.cdr.detectChanges(); 

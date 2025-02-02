@@ -1,13 +1,13 @@
-<div
-  class="container h-screen flex align-content-center justify-content-center"
->
+
 <div *ngIf="loading" class="flex align-items-center spinner-overlay z-5">
   <p-progressSpinner ariaLabel="loading" />
 </div>
-  <p-card
+<div class="row flex h-full w-full justify-content-center justify-content-end">
+  <div class="col-12 md:col-6 flex justify-content-center align-items-center">
+    <p-card
     header="Sign-In"
-    class="flex align-items-center"
-    [style]="{ width: '500px' }"
+    styleClass="bg-cyan-100 w-30rem"
+    
   >
     <form class="sign-in-form" [formGroup]="signInForm" (ngSubmit)="onSubmit()">
       <div class="mb-3">
@@ -67,7 +67,7 @@
         >Forgot Password?</a
       >
       </div>
-      <!--<div class="mb-2">
+              <!--<div class="mb-2">
         <button
         pButton
         label="Sign in with Google"
@@ -89,6 +89,10 @@
         (click)="signInWithFacebook()"
       ></button>
       </div>-->
+
   </p-card>
-  <p-toast />
+  </div>
+
 </div>
+    
+  <p-toast />

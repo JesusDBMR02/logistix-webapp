@@ -1,8 +1,8 @@
 <div class="row">
   <div class="col-12 h-40rem  overflow-y-scroll">
-    <p-card [header]="'Wellcome to LogistiX ' + userEmail" >
+    <p-card styleClass="bg-cyan-100" [header]="'Welcome to LogistiX ' + userEmail" >
       <div class="row">
-        <div class="col-12 text-center shadow-3 bg-cyan-200 border-round">
+        <div class="col-12 text-center shadow-3 bg-white border-round">
             <h3> <span class="text-red-500">OUTSTOCK</span>  Products</h3>
           <p-carousel
             [value]="products"
@@ -13,7 +13,7 @@
           >
             <ng-template let-products pTemplate="item">
                 <div class="row ">
-                    <div class=" shadow-2 bg-green-200  border-round m-2 p-3">
+                    <div class=" shadow-2 bg-teal-200  border-round m-2 p-3">
                         <div class="mb-3">
                           <div class="relative mx-auto">
                             <img
@@ -51,7 +51,7 @@
         </div>
       </div>
       <div class="row lg:flex">
-        <div class="col-12 lg:col-6 mr-2  mt-4 text-center shadow-3 bg-cyan-200 border-round">
+        <div class="col-12 lg:col-6 mr-2  mt-4 text-center shadow-3 bg-white border-round">
             <h3>Last Week Completed Sales</h3>
             <div class="row h-25rem  overflow-y-scroll">
               <div *ngFor="let sale of sales" class=" shadow-2 bg-teal-200  border-round m-2 p-3">
@@ -81,10 +81,10 @@
                 </div>
           </div>
         </div>
-        <div class="col-12 lg:col-6  mt-4 mr-3 text-center shadow-3 bg-teal-200 border-round">
+        <div class="col-12 lg:col-6  mt-4 mr-3 text-center shadow-3 bg-white border-round">
             <h3>Last Week Completed Purchases</h3>
             <div class="row  h-25rem  overflow-y-scroll">
-              <div *ngFor="let purchase of purchases" class=" shadow-2 bg-cyan-200  border-round m-2 p-3">
+              <div *ngFor="let purchase of purchases" class=" shadow-2 bg-teal-200  border-round m-2 p-3">
                   <div class="mb-3">
                     <div class="relative mx-auto">
                       <h4>{{purchase.name}}</h4>

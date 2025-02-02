@@ -13,7 +13,7 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ForgotPasswordComponent } from './authentication/forgot-password/forgot-password.component';
 import { SignUpComponent } from './authentication/sign-up/sign-up.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ConfirmEmailComponent } from './authentication/confirm-email/confirm-email.component';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CompanyComponent } from './mainapp/company/company.component';
@@ -28,6 +28,7 @@ import { ProductComponent } from './mainapp/product/product.component';
 import { OrderListModule } from 'primeng/orderlist';
 import { SaleComponent } from './mainapp/sale/sale.component';
 import { PurchaseComponent } from './mainapp/purchase/purchase.component';
+import { AuthInterceptor } from './interceptors/auth/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,11 @@ import { PurchaseComponent } from './mainapp/purchase/purchase.component';
     HttpClientModule,
 
   ],
-  providers: [ConfirmationService, MessageService],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true 
+  },ConfirmationService, MessageService],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

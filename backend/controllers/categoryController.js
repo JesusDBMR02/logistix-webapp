@@ -9,7 +9,7 @@ const setDb = (database) => {
 
 const getAllCategories = async (req, res) => {
     try {
-        const categories = await db.find().toArray();
+        const categories = await db.find({ userId: req.user.uid }).toArray();
         res.status(200).json(categories);
     } catch (error) {
         console.error(error);
@@ -19,7 +19,7 @@ const getAllCategories = async (req, res) => {
 const getCategoryById = async (req, res) => {
     try {
         const id = req.params.id;
-        const category = await db.findOne({ _id: new ObjectId(id) })
+        const category = await db.findOne({ _id: new ObjectId(id), userId: req.user.uid  })
         res.status(200).json(category);
     } catch (error) {
         console.error(error);
@@ -30,7 +30,9 @@ const createCategory = async (req, res) => {
     const { name, description } = req.body;   
     try {
         const category = new Category(name, description);
-        const result = await db.insertOne(category);
+        const result = await db.insertOne({
+            userId: req.user.uid, name, description},
+            );
         if (!result.insertedId) {
             return res.status(500).json({ message: 'Error al insertar la categoría' });
         }
@@ -51,14 +53,14 @@ const updateCategory = async (req, res) => {
         const data = req.body; 
 
         const result = await db.updateOne(
-            { _id: new ObjectId(id) }, 
+            { _id: new ObjectId(id), userId: req.user.uid  }, 
             { $set: data } 
         )
         if (result.matchedCount === 0) {
             return res.status(404).json({ message: "Categoría no encontrada" });
         }
 
-        const updatedCategory = await db.findOne({ _id: new ObjectId(id) });
+        const updatedCategory = await db.findOne({ _id: new ObjectId(id), userId: req.user.uid  });
         res.json(updatedCategory);
     } catch (error) {
         console.error("Error al actualizar la categoría:", error);
@@ -69,7 +71,7 @@ const updateCategory = async (req, res) => {
 const deleteCategory = async (req, res) => {
     try {
         const categoryId = req.params.id;
-        const result = await db.deleteOne({ _id: new ObjectId(categoryId) });
+        const result = await db.deleteOne({ _id: new ObjectId(categoryId), userId: req.user.uid  });
         if (result.deletedCount === 0) {
             return res.status(404).json({ message: "Categoría no encontrada" });
         }

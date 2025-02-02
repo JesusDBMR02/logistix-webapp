@@ -62,6 +62,9 @@ export class SignInComponent implements OnInit {
       })
       .catch((err) => {
         this.showToast('error', 'Error al iniciar sesión: ' + err.message);
+      })
+      .finally(()=>{
+        this.loading = false;
       });
   }
 

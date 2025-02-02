@@ -3,16 +3,16 @@
         <p-progressSpinner ariaLabel="loading" />
     </div>
     <div class="col-12">
-        <p-card header="Suppliers">
+        <p-card styleClass="bg-cyan-100" header="Suppliers">
             <div class="row mb-2 mx-2">
-                <button pButton type="button" icon="pi pi-plus" class="mr-2"
+                <button pButton type="button" icon="pi pi-plus" class="mr-2 mb-2"
                     (click)="showDialogCreate()"></button>
                 <p-dropdown [options]="sortOptions" class="mr-2" (onChange)="onSortChange($event)" placeholder="Sort by">
                 </p-dropdown>
-                <p-dropdown [options]="sortStatus" (onChange)="onSortChange($event)" placeholder="Sort by">
+                <p-dropdown [options]="sortStatus" class="mr-2" (onChange)="onSortChange($event)" placeholder="Sort by">
                 </p-dropdown>
 
-                <span class="p-input-icon-left ml-2">
+                <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
                     <input pInputText type="text" placeholder="Search by name" [(ngModel)]="searchTerm"
                         (input)="filterBrands()" />
@@ -24,17 +24,17 @@
                     <ng-template let-supplier pTemplate="list">
                         <div *ngFor="let supplier of supplier; let first = first" class="p-dataview-list">
                             <div
-                                class="flex flex-col sm:flex-row sm:items-center p-3 mx-2 my-3 gap-4 border-round bg-cyan-200 shadow-2" >
-                                <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
-                                    <div class="flex flex-row md:flex-col justify-between items-start gap-2">
+                                class="lg:flex p-3 mx-2 my-3 gap-4 border-round bg-teal-200 shadow-2" >
+                                <div class="flex flex-1 gap-6">
+                                    <div class="flex mb-2 gap-2">
                                         <div>
                                             <span class="font-medium text-secondary text-lg">{{
                                                 supplier.name
                                                 }}</span>
-                                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2 text-md">
+                                            <div class="font-medium mt-2 text-md">
                                                 {{ supplier.supplierType }}
                                             </div>
-                                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                                            <div class="font-medium mt-2">
                                                 <p-tag (click)="inactiveActive(supplier._id)" [severity]="
                                                 supplier.status === 'active' ? 'success' : 'danger'
                                                 " [value]="supplier.status" />
@@ -42,44 +42,44 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
-                                    <div class="flex flex-row md:flex-col justify-between items-start gap-2">
+                                <div class="flex flex-1 gap-6">
+                                    <div class="flex mb-2 gap-2">
                                         <div>
                                             <span class="font-medium text-secondary text-lg">Contact:</span>
-                                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2 text-md">
+                                            <div class="font-medium text-md">
                                                 {{ supplier.contact }}
                                             </div>
-                                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                                            <div class="font-medium mt-2">
                                                 {{supplier.phone}}
                                             </div>
-                                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                                            <div class="font-medium mt-2">
                                                 {{supplier.email}}
                                             </div>
 
                                         </div>
                                     </div>
                                 </div>
-                                <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
-                                    <div class="flex flex-row md:flex-col justify-between items-start gap-2">
+                                <div class="flex flex-1 gap-6">
+                                    <div class="flex mb-3 gap-2">
                                         <div>
                                             <span class="font-medium text-secondary text-lg">Address:</span>
-                                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2 text-md">
+                                            <div class="font-medium mt-2 text-md">
                                                 {{ supplier.address.country }}
                                             </div>
-                                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                                            <div class="font-medium mt-2">
                                                 {{supplier.address.state}}
                                             </div>
-                                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                                            <div class="font-medium mt-2">
                                                 {{supplier.address.city}}, {{supplier.address.postalCode}}
                                             </div>
-                                            <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                                            <div class="font-medium mt-2">
                                                 {{supplier.address.street}}
                                             </div>
 
                                         </div>
                                     </div>
                                 </div>
-                                <div class="flex align-items-end text-right">
+                                <div class="flex justify-content-between lg:align-items-end text-right">
                                     <button pButton type="button" icon="pi pi-eye"
                                     class="p-button-rounded p-button-info ml-2"
                                     (click)="showDialogNotes(supplier._id)"></button>

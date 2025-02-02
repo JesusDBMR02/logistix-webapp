@@ -16,7 +16,7 @@ const setDb = (database, databaseCategories, databaseBrands, databaseSuppliers) 
 
 const getAllProducts = async (req, res) => {
     try {
-        const products = await db.find().toArray();
+        const products = await db.find({ userId: req.user.uid }).toArray();
         
 
         res.status(200).json(products);
@@ -30,7 +30,7 @@ const getAllProducts = async (req, res) => {
 const getProductById = async (req, res) => {
     try {
         const id = req.params.id;
-        const product = await db.findOne({ _id: new ObjectId(id) })
+        const product = await db.findOne({ _id: new ObjectId(id), userId: req.user.uid  })
         res.status(200).json(product);
     } catch (error) {
         console.error(error);
@@ -43,16 +43,32 @@ const createProduct = async (req, res) => {
     try {
         const price = salePrice - (salePrice * (discount / 100));
         const total = price + (price * (tax / 100));
-        const category = await dbCategories.findOne({ _id: new ObjectId(categoryId) });
-        const brand = await dbBrands.findOne({ _id: new ObjectId(brandId) });
-        const supplier = await dbSuppliers.findOne({ _id: new ObjectId(supplierId) });
+        const category = await dbCategories.findOne({ _id: new ObjectId(categoryId), userId: req.user.uid  });
+        const brand = await dbBrands.findOne({ _id: new ObjectId(brandId), userId: req.user.uid  });
+        const supplier = await dbSuppliers.findOne({ _id: new ObjectId(supplierId), userId: req.user.uid  });
 
         const product = new Product(name, description, category, brand, supplier, purchasePrice, salePrice, discount,tax, stock, measuring, status , img, attributes, total);
-        const result = await db.insertOne(product);
+        const result = await db.insertOne({
+            userId: req.user.uid ,
+            name,
+            description,
+            category,
+            brand,
+            supplier,
+            purchasePrice,
+            salePrice,
+            discount,
+            tax,
+            stock,
+            measuring,
+            status,
+            img,
+            attributes,
+            total});
         if (!result.insertedId) {
             return res.status(500).json({ message: 'Error al insertar el producto' });
         }
-        updateSuppliedProducts(supplierId,result.insertedId ); 
+        updateSuppliedProducts(supplierId,result.insertedId, req ); 
 
         res.status(201).json({
             message: 'Producto insertado correctamente.',
@@ -82,15 +98,15 @@ const updateProduct = async (req, res) => {
         }else{
             const price = data.salePrice - (data.salePrice * (data.discount / 100));
             const total = price + (price * (data.tax / 100));
-            const category = await dbCategories.findOne({ _id: new ObjectId(data.categoryId) });
-            const brand = await dbBrands.findOne({ _id: new ObjectId(data.brandId) });
-            const supplier = await dbSuppliers.findOne({ _id: new ObjectId(data.supplierId) });
+            const category = await dbCategories.findOne({ _id: new ObjectId(data.categoryId), userId: req.user.uid  });
+            const brand = await dbBrands.findOne({ _id: new ObjectId(data.brandId), userId: req.user.uid  });
+            const supplier = await dbSuppliers.findOne({ _id: new ObjectId(data.supplierId), userId: req.user.uid  });
             data = {...data, total, category, supplier, brand };
-            updateSuppliedProducts(supplierId,id ); 
+            updateSuppliedProducts(supplierId,id,req ); 
             
         }
         const result = await db.updateOne(
-            { _id: new ObjectId(id) }, 
+            { _id: new ObjectId(id), userId: req.user.uid  }, 
             { $set: data } 
         )
         
@@ -98,7 +114,7 @@ const updateProduct = async (req, res) => {
             return res.status(404).json({ message: "Producto no encontrado" });
         }
 
-        const updatedProduct = await db.findOne({ _id: new ObjectId(id) });
+        const updatedProduct = await db.findOne({ _id: new ObjectId(id),userId: req.user.uid });
         res.json(updatedProduct);
     } catch (error) {
         console.error("Error al actualizar el producto:", error);
@@ -109,7 +125,7 @@ const updateProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
     try {
         const productId = req.params.id;
-        const result = await db.deleteOne({ _id: new ObjectId(productId) });
+        const result = await db.deleteOne({ _id: new ObjectId(productId),userId: req.user.uid });
         if (result.deletedCount === 0) {
             return res.status(404).json({ message: "Producto no encontrado" });
         }
@@ -120,23 +136,23 @@ const deleteProduct = async (req, res) => {
     }
 };
 
-const updateSuppliedProducts=async (id, productId)=>{
+const updateSuppliedProducts=async (id, productId, req)=>{
     try {
-        const product = await db.findOne({ _id: new ObjectId(productId) });
+        const product = await db.findOne({ _id: new ObjectId(productId),userId: req.user.uid });
         data = {suppliedProducts: product}
-        const supplier = await dbSuppliers.findOne({ _id: new ObjectId(id) });
+        const supplier = await dbSuppliers.findOne({ _id: new ObjectId(id),userId: req.user.uid });
         if (!supplier) {
             throw new Error("Proveedor no encontrado");
         }
 
         if (!Array.isArray(supplier.suppliedProducts)) {
             await dbSuppliers.updateOne(
-                { _id: new ObjectId(id) },
+                { _id: new ObjectId(id),userId: req.user.uid },
                 { $set: { suppliedProducts: [] } }
             );
         }
         const result = await dbSuppliers.updateOne(
-            { _id: new ObjectId(id) },
+            { _id: new ObjectId(id),userId: req.user.uid },
             { $push: data }
         );
         if (result.matchedCount === 0) {

@@ -2,7 +2,8 @@ const express = require('express');
 const { signUp, 
   setDb,
   getUsers,
-  updateUser } = require('../controllers/userController');
+  updateUser, 
+  getUserByEmail} = require('../controllers/userController');
 const authMiddleware = require('../middleware/authMiddleware');
 const router = express.Router();
 
@@ -16,7 +17,7 @@ router.post('/signUp', signUp);
 
 router.get('/', authMiddleware, getUsers );
 
-router.get('/:email', authMiddleware, getUsers );
+router.get('/:email', authMiddleware, getUserByEmail );
 
 router.put('/:id', authMiddleware, updateUser );
 

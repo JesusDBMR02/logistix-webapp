@@ -47,7 +47,7 @@ const signIn = async (req, res) => {
 
 const getUsers = async (req, res) => {
   try {
-      const user = await db.find().toArray();
+      const user = await db.find({userId: req.user.uid}).toArray();
       
 
       res.status(200).json(user);
@@ -61,7 +61,7 @@ const getUserByEmail = async (req, res) => {
    try {
           const email = req.params.email;
           const user = await db.findOne({ email:email })
-          res.status(200).json(user);
+          res.status(201).json(user);
       } catch (error) {
           console.error(error);
           res.status(500).json({ message: 'Error al obtener el usuario', error });

@@ -9,7 +9,7 @@ const setDb = (database) => {
 
 const getAllSuppliers = async (req, res) => {
     try {
-        const suppliers = await db.find().toArray();
+        const suppliers = await db.find({userId: req.user.uid}).toArray();
         res.status(200).json(suppliers);
     } catch (error) {
         console.error(error);
@@ -19,7 +19,7 @@ const getAllSuppliers = async (req, res) => {
 const getSupplierById = async (req, res) => {
     try {
         const id = req.params.id;
-        const supplier = await db.findOne({ _id: new ObjectId(id) })
+        const supplier = await db.findOne({ _id: new ObjectId(id),userId: req.user.uid })
         res.status(200).json(supplier);
     } catch (error) {
         console.error(error);
@@ -30,7 +30,16 @@ const createSupplier = async (req, res) => {
     const {name, contact, phone, email, address, supplierType, status, notes } = req.body;   
     try {
         const supplier = new Supplier(name, contact, phone, email, address, supplierType,status, notes);
-        const result = await db.insertOne(supplier);
+        const result = await db.insertOne({
+            userId: req.user.uid,
+            name:name,
+            contact: contact,
+            phone: phone,
+            email: email,
+            address: address,
+            supplierType: supplierType,
+            status: status,
+            notes: notes});
         if (!result.insertedId) {
             return res.status(500).json({ message: 'Error al insertar el proveedor' });
         }
@@ -51,14 +60,14 @@ const updateSupplier = async (req, res) => {
         const data = req.body; 
 
         const result = await db.updateOne(
-            { _id: new ObjectId(id) }, 
+            { _id: new ObjectId(id),userId: req.user.uid }, 
             { $set: data } 
         )
         if (result.matchedCount === 0) {
             return res.status(404).json({ message: "Proveedor no encontrado" });
         }
 
-        const updatedSupplier = await db.findOne({ _id: new ObjectId(id) });
+        const updatedSupplier = await db.findOne({ _id: new ObjectId(id),userId: req.user.uid });
         res.json(updatedSupplier);
     } catch (error) {
         console.error("Error al actualizar el proveedor:", error);
@@ -69,7 +78,7 @@ const updateSupplier = async (req, res) => {
 const deleteSupplier = async (req, res) => {
     try {
         const supplierId = req.params.id;
-        const result = await db.deleteOne({ _id: new ObjectId(supplierId) });
+        const result = await db.deleteOne({ _id: new ObjectId(supplierId),userId: req.user.uid });
         if (result.deletedCount === 0) {
             return res.status(404).json({ message: "Proveedor no encontrado" });
         }

@@ -3,9 +3,9 @@
         <p-progressSpinner ariaLabel="loading" />
     </div>
     <div class="col-12">
-        <p-card header="Brands">
+        <p-card styleClass="bg-cyan-100"header="Brands">
             <div class="row mb-2 mx-2">
-                <button pButton type="button" icon="pi pi-plus" class="p-button mr-2" (click)="showDialogCreate()">
+                <button pButton type="button" icon="pi pi-plus" class="p-button mx-2 mb-2" (click)="showDialogCreate()">
                 </button>
                 <p-dropdown [options]="sortOptions" (onChange)="onSortChange($event)" placeholder="Sort by">
                 </p-dropdown>
@@ -23,14 +23,14 @@
                     <ng-template let-brand pTemplate="list">
                         <div *ngFor="let brand of brand; let first = first" class="p-dataview-list">
                             <div
-                                class="flex flex-col sm:flex-row sm:items-center p-3 mx-2 my-3 gap-4 border-round  bg-cyan-200 shadow-2">
+                                class="md:flex p-3 mx-2 my-3 gap-4 border-round bg-teal-200 shadow-2">
                                 <div class="md:w-40 relative">
-                                    <img class="block xl:block mx-auto border-round" width="120px" [src]="brand.logo"
+                                    <img class="block mb-2 mx-auto border-round" width="120px" [src]="brand.logo"
                                         [alt]="brand.name" />
 
                                 </div>
-                                <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
-                                    <div class="flex flex-row md:flex-col justify-between items-start gap-2">
+                                <div class="flex flex-1 gap-6">
+                                    <div class="flex mb-3 gap-2">
                                         <div>
                                             <span class="font-medium text-secondary text-lg">{{ brand.name }}</span>
                                             <div class=" font-medium text-surface-900 dark:text-surface-0 mt-2 text-sm">
@@ -38,7 +38,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="flex align-items-end text-right">
+                                <div class="flex justify-content-between md:align-items-end text-right">
                                     <button pButton type="button" icon="pi pi-pencil"
                                         class=" p-button-warning p-button-rounded mr-2" (click)="showDialogUpdate(brand._id)">
                                     </button>
@@ -116,7 +116,7 @@
                 </div>
             </div>
             <div class="flex justify-content-between gap-2">
-                <p-button label="Cancel" severity="secondary" (click)="visible = false" />
+                <p-button label="Cancel" severity="secondary" (click)="visibleUpt = false" />
                 <p-button label="Edit" type="submit" />
             </div>
         </form>

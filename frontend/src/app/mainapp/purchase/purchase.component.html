@@ -3,16 +3,16 @@
         <p-progressSpinner ariaLabel="loading" />
     </div>
     <div class="col-12">
-        <p-card header="Purchases">
+        <p-card styleClass="bg-cyan-100" header="Purchases">
             <div class="row mb-2 mx-2">
-                <button pButton type="button" icon="pi pi-plus" class="p-button mr-2" (click)="showDialogCreate()">
+                <button pButton type="button" icon="pi pi-plus" class="p-button mx-2 mb-2" (click)="showDialogCreate()">
                 </button>
                 <p-dropdown [options]="statusArray"  [(ngModel)]="selectedStatus" (onChange)="onSortChange($event)" placeholder="Sort by status">
                 </p-dropdown>
                 <p-dropdown [options]="suppliersArray" class="ml-2" [(ngModel)]="selectedSupplier" (onChange)="onSortChange($event)"
                 placeholder="Sort by supplier">
             </p-dropdown>
-            <button pButton icon="pi pi-times" class="p-button-danger ml-2" (click)="clearFilters()"></button>
+            <button pButton icon="pi pi-times" class="p-button-danger ml-2 mb-2" (click)="clearFilters()"></button>
                 <span class="p-input-icon-left ml-2">
                     <i class="pi pi-search"></i>
                     <input pInputText type="text" placeholder="Search by name" [(ngModel)]="searchTerm"
@@ -26,26 +26,26 @@
                     <ng-template let-purchases pTemplate="list">
                         <div *ngFor="let purchase of purchases; let first = first" class="p-dataview-list">
                             <div
-                                class="flex flex-col sm:flex-row sm:items-center p-3 mx-2 my-3 gap-4 border-round  bg-cyan-200 shadow-2">
+                                class="lg:flex p-3 mx-2 my-3 gap-4 border-round  bg-teal-200 shadow-2">
                                 
-                                <div class="flex flex-col md:flex-row flex-1 gap-6">
-                                    <div class="flex flex-row md:flex-col gap-2">
+                                <div class="flex flex-1 gap-6">
+                                    <div class="flex gap-2">
                                         <div>
                                             <h2>{{ purchase.name }}</h2>
-                                            <div class=" mb-2 text-surface-900 dark:text-surface-0 mt-2 text-sm">
+                                            <div class=" mb-2 mt-2 text-sm">
                                                 {{ purchase.purchaseDate }}</div>
-                                            <div class=" mb-2 text-surface-900 dark:text-surface-0 mt-2 text-sm">
+                                            <div class=" mb-2 mt-2 text-sm">
                                                 {{ purchase.supplier.name }}</div>
                                             
                                         </div>
                                     </div>
                                 </div>
-                                <div class="flex flex-col md:flex-row align-items-center flex-1 gap-6">
-                                    <div class="flex flex-row md:flex-col justify-between items-start gap-2">
+                                <div class="flex align-items-center flex-1 gap-6">
+                                    <div class="flex gap-2">
                                         <div>
                                             <span class="font-semibold text-lg">Payment Method:{{ purchase.paymentMethod }}</span>
                                             
-                                            <div class=" font-medium text-surface-900 dark:text-surface-0 mt-2 text-sm">
+                                            <div class=" font-medium mt-2 text-sm">
                                                 <p-tag (click)="showDialogUpdateStatus(purchase._id)" [severity]="
                                                 purchase.status === 'COMPLETED' ? 'success' : purchase.status==='PENDING' ? 'warning' : 'danger'
                                                 " [value]="purchase.status" />
@@ -53,14 +53,14 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="flex flex-col md:flex-row align-items-end text-right md:items-center flex-1 gap-6">
-                                    <div class="flex flex-row md:flex-col justify-between items-start gap-2">
+                                <div class="flex align-items-end text-right  flex-1 gap-6">
+                                    <div class="flex gap-2">
                                         <div>
                                             <h2>Total: {{purchase.totalAmount | currency: 'EUR'}}</h2>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="flex align-items-end text-right">
+                                <div class="flex justify-content-between lg:align-items-end text-right">
                                     <button pButton type="button" icon="pi pi-file-pdf"
                                         class=" p-button-danger p-button-rounded mr-2" (click)="generatePDF(purchase._id)">
                                     </button>
