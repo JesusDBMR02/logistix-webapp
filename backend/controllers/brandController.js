@@ -13,7 +13,6 @@ const getAllBrands = async (req, res) => {
         const brands = await db.find({ userId: req.user.uid }).toArray();
         res.status(200).json(brands);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: 'Error al obtener las marcas.', error });
     }
 };
@@ -23,7 +22,6 @@ const getBrandById = async (req, res) => {
         const brand = await db.findOne({ _id: new ObjectId(id), userId: req.user.uid  })
         res.status(200).json(brand);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: 'Error al obtener la marca', error });
     }
 };
@@ -39,14 +37,13 @@ const createBrand = async (req, res) => {
             logo
         });
         if (!result.insertedId) {
-            return res.status(500).json({ message: 'Error al insertar la categoría' });
+            return res.status(500).json({ message: 'Error al insertar la marca' });
         }
         res.status(201).json({
             message: 'Marca insertada correctamente.',
             brand: { _id: result.insertedId, ...brand }
         });
     } catch (error) {
-        console.error('Error al insertar la marca:', error);
         res.status(500).json({ message: 'Error al insertar la marca', error });
     }
 }
@@ -68,7 +65,6 @@ const updateBrand = async (req, res) => {
         const updatedBrand = await db.findOne({ _id: new ObjectId(id),userId: req.user.uid  });
         res.json(updatedBrand);
     } catch (error) {
-        console.error("Error al actualizar la marca:", error);
         res.status(500).json({ message: "Error al actualizar la marca", error });
     } 
 };
@@ -82,7 +78,6 @@ const deleteBrand = async (req, res) => {
         }
         res.json({ message: "Marca eliminada correctamente" });
     } catch (error) {
-        console.error("Error al eliminar la Marca:", error);
         res.status(500).json({ message: "Error al eliminar la Marca" });
     }
 };

@@ -58,6 +58,7 @@ export class SignInComponent implements OnInit {
       .then((token) => {
         this.showToast('success', 'Inicio de sesión exitoso.');
         this.sessionService.saveDataSession(token, email);
+        console.log(token);
         this.navigateToLogisticHome();
       })
       .catch((err) => {

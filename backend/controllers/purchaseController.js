@@ -12,7 +12,6 @@ const getAllPurchases = async (req, res) => {
         const purchases = await db.find({userId: req.user.uid}).toArray();
         res.status(200).json(purchases);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: 'Error al obtener las compras.', error });
     }
 };
@@ -22,7 +21,6 @@ const getPurchaseById = async (req, res) => {
         const purchase = await db.findOne({ _id: new ObjectId(id),userId: req.user.uid })
         res.status(200).json(purchase);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: 'Error al obtener la compra', error });
     }
 };
@@ -63,7 +61,6 @@ const createPurchase = async (req, res) => {
             purchase: { _id: result.insertedId, ...purchase }
         });
     } catch (error) {
-        console.error('Error al insertar la compra:', error);
         res.status(500).json({ message: 'Error al insertar la compra', error: error.message });
     }
 };
@@ -95,12 +92,11 @@ const updatePurchase = async (req, res) => {
         const updatedPurchase = await db.findOne({ _id: new ObjectId(id),userId: req.user.uid });
         res.json(updatedPurchase);
     } catch (error) {
-        console.error("Error al actualizar la compra:", error);
         res.status(500).json({ message: "Error al actualizar la compra", error });
     } 
 };
 
-const deletePurchase = async (req, res) => {
+/*const deletePurchase = async (req, res) => {
     try {
         const purchaseId = req.params.id;
         const result = await db.deleteOne({ _id: new ObjectId(purchaseId),userId: req.user.uid });
@@ -109,9 +105,8 @@ const deletePurchase = async (req, res) => {
         }
         res.json({ message: "Compra eliminado correctamente" });
     } catch (error) {
-        console.error("Error al eliminar la compra:", error);
         res.status(500).json({ message: "Error al eliminar la compra" });
     }
-};
+};*/
 
-module.exports = { setDb, getAllPurchases, getPurchaseById, createPurchase, updatePurchase, deletePurchase };
+module.exports = { setDb, getAllPurchases, getPurchaseById, createPurchase, updatePurchase };

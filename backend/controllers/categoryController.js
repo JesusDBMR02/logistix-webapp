@@ -12,7 +12,6 @@ const getAllCategories = async (req, res) => {
         const categories = await db.find({ userId: req.user.uid }).toArray();
         res.status(200).json(categories);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: 'Error al obtener las categorías.', error });
     }
 };
@@ -22,7 +21,6 @@ const getCategoryById = async (req, res) => {
         const category = await db.findOne({ _id: new ObjectId(id), userId: req.user.uid  })
         res.status(200).json(category);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: 'Error al obtener la categoría', error });
     }
 };
@@ -41,7 +39,6 @@ const createCategory = async (req, res) => {
             category: { _id: result.insertedId, ...category }
         });
     } catch (error) {
-        console.error('Error al insertar la categoría:', error);
         res.status(500).json({ message: 'Error al insertar la categoría', error: error.message });
     }
 };
@@ -63,7 +60,6 @@ const updateCategory = async (req, res) => {
         const updatedCategory = await db.findOne({ _id: new ObjectId(id), userId: req.user.uid  });
         res.json(updatedCategory);
     } catch (error) {
-        console.error("Error al actualizar la categoría:", error);
         res.status(500).json({ message: "Error al actualizar la categoría", error });
     } 
 };
@@ -77,7 +73,6 @@ const deleteCategory = async (req, res) => {
         }
         res.json({ message: "Categoría eliminada correctamente" });
     } catch (error) {
-        console.error("Error al eliminar la categoría:", error);
         res.status(500).json({ message: "Error al eliminar la categoría" });
     }
 };

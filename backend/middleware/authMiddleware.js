@@ -13,7 +13,6 @@ const authMiddleware = async (req, res, next) => {
       req.user = decodedToken; 
       next();
     } catch (error) {
-      console.error("Error verificando el token:", error);
       res.status(401).json({ message: 'Token inválido o expirado' });
     }
   };

@@ -14,11 +14,17 @@ const client = new MongoClient(process.env.MONGODB_URI, {
 async function connectToMongoDB() {
   try {
     await client.connect();
-    await client.db('LogistiX').command({ ping: 1 });
-    console.log('Connected to MongoDB');
-    return client.db('LogistiX');
+    
+    // Elegimos la base de datos según el entorno
+    const dbName = process.env.NODE_ENV === 'test' ? 'LogistiXTest' : 'LogistiX';
+    const db = client.db(dbName);
+
+    await db.command({ ping: 1 });
+    console.log(`Conectado a MongoDB: ${dbName}`);
+
+    return db;
   } catch (error) {
-    console.error('Failed to connect to MongoDB:', error);
+    console.error('Error al conectar a MongoDB:', error);
   }
 }
 

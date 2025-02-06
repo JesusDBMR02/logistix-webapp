@@ -21,7 +21,6 @@ const getAllProducts = async (req, res) => {
 
         res.status(200).json(products);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: 'Error al obtener las productos.', error });
     }
 
@@ -33,7 +32,6 @@ const getProductById = async (req, res) => {
         const product = await db.findOne({ _id: new ObjectId(id), userId: req.user.uid  })
         res.status(200).json(product);
     } catch (error) {
-        console.error(error);
         res.status(500).json({ message: 'Error al obtener el producto', error });
     }
 };
@@ -75,7 +73,6 @@ const createProduct = async (req, res) => {
             product: { _id: result.insertedId, ...product }
         });
     } catch (error) {
-        console.error('Error al insertar el producto:', error);
         res.status(500).json({ message: 'Error al insertar el producto', error: error.message });
     }
 };
@@ -117,7 +114,6 @@ const updateProduct = async (req, res) => {
         const updatedProduct = await db.findOne({ _id: new ObjectId(id),userId: req.user.uid });
         res.json(updatedProduct);
     } catch (error) {
-        console.error("Error al actualizar el producto:", error);
         res.status(500).json({ message: "Error al actualizar el producto", error });
     } 
 };
@@ -131,7 +127,6 @@ const deleteProduct = async (req, res) => {
         }
         res.json({ message: "Producto eliminado correctamente" });
     } catch (error) {
-        console.error("Error al eliminar la producto:", error);
         res.status(500).json({ message: "Error al eliminar el producto" });
     }
 };
@@ -160,7 +155,6 @@ const updateSuppliedProducts=async (id, productId, req)=>{
         }
         return true;
     } catch (error) {
-        console.error("Error al actualizar el proovedor proporcionado:", error);
         return false;
     }
 }

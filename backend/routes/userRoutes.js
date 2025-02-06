@@ -1,7 +1,6 @@
 const express = require('express');
 const { signUp, 
   setDb,
-  getUsers,
   updateUser, 
   getUserByEmail} = require('../controllers/userController');
 const authMiddleware = require('../middleware/authMiddleware');
@@ -15,7 +14,7 @@ router.use((req, res, next) => {
 
 router.post('/signUp', signUp);
 
-router.get('/', authMiddleware, getUsers );
+//router.get('/', authMiddleware, getUsers );
 
 router.get('/:email', authMiddleware, getUserByEmail );
 
