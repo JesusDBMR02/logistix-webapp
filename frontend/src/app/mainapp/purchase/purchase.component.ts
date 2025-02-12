@@ -218,25 +218,6 @@ export class PurchaseComponent implements OnInit {
       this.showToast('warn', 'The form is invalid');
     }
   }
-
-  deleteBrand(id: string) {
-    this.confirmationService.confirm({
-      message: 'Are you sure you want to delete this brand?',
-      header: 'Delete Confirmation',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.purchaseService.deletePurchase(id).subscribe({
-          next: () => {
-            this.showToast('success', 'Brand deleted successfully');
-            this.getPurchases();
-          },
-          error: (error: any) => {
-            this.showToast('error', 'An error occurred: ' + error);
-          }
-        });
-      }
-    });
-  }
     
   createPurchase() {
     const saleDate = new Date();

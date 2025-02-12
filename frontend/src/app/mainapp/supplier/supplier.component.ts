@@ -142,25 +142,6 @@ export class SupplierComponent implements OnInit {
       this.showToast('warn', 'The form is invalid');
     }
   }
-
-  deleteSupplier(id: string) {
-    this.confirmationService.confirm({
-      message: 'Are you sure you want to delete this supplier?',
-      header: 'Delete Confirmation',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.supplierService.deleteSupplier(id).subscribe({
-          next: () => {
-            this.showToast('success', 'Supplier deleted successfully');
-            this.getSuppliers();
-          },
-          error: (error: any) => {
-            this.showToast('error', 'An error occurred: ' + error);
-          }
-        });
-      }
-    });
-  }
     
   createSupplier() {
     if (this.createUptForm.valid) {
