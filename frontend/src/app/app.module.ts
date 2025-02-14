@@ -13,7 +13,7 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ForgotPasswordComponent } from './authentication/forgot-password/forgot-password.component';
 import { SignUpComponent } from './authentication/sign-up/sign-up.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ConfirmEmailComponent } from './authentication/confirm-email/confirm-email.component';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CompanyComponent } from './mainapp/company/company.component';
@@ -22,6 +22,13 @@ import { MenuComponent } from './shared/menu/menu.component';
 import { MainappComponent } from './mainapp/mainapp.component';
 import { CategoryComponent } from './mainapp/category/category.component';
 import { DataView, DataViewModule } from 'primeng/dataview';
+import { BrandComponent } from './mainapp/brand/brand.component';
+import { SupplierComponent } from './mainapp/supplier/supplier.component';
+import { ProductComponent } from './mainapp/product/product.component';
+import { OrderListModule } from 'primeng/orderlist';
+import { SaleComponent } from './mainapp/sale/sale.component';
+import { PurchaseComponent } from './mainapp/purchase/purchase.component';
+import { AuthInterceptor } from './interceptors/auth/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -31,6 +38,11 @@ import { DataView, DataViewModule } from 'primeng/dataview';
     HomeComponent,
     FooterComponent,
     CategoryComponent,
+    BrandComponent,
+    SupplierComponent,
+    ProductComponent,
+    SaleComponent,
+    PurchaseComponent,
     SignUpComponent,
     NavbarMenuComponent,
     ConfirmEmailComponent,
@@ -51,7 +63,11 @@ import { DataView, DataViewModule } from 'primeng/dataview';
     HttpClientModule,
 
   ],
-  providers: [ConfirmationService, MessageService],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true 
+  },ConfirmationService, MessageService],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

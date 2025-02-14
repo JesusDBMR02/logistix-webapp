@@ -4,10 +4,11 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-confirm-email',
-  templateUrl: './confirm-email.component.html',
-  styleUrl: './confirm-email.component.scss', 
-  providers:[MessageService]
+    selector: 'app-confirm-email',
+    templateUrl: './confirm-email.component.html',
+    styleUrl: './confirm-email.component.scss',
+    providers: [MessageService],
+    standalone: false
 })
 export class ConfirmEmailComponent implements OnInit {
   email: string | null = null; 

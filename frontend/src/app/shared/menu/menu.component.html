@@ -1,14 +1,35 @@
-<p-menu [model]="items" styleClass="w-full m-4 md:w-15rem">
+<div class="row  ">
+    <p-button class="absolute top-5 z-3 xl:hidden" (onClick)="menu.toggle($event)" icon="pi pi-ellipsis-v"/>
+    <div class="col">
+        <p-menu #menu [model]="items" [popup]="true" styleClass="w-full md:w-10rem">
 
-    <ng-template pTemplate="submenuheader" let-item>
-        <span class="text-primary font-bold">{{ item.label }}</span>
-    </ng-template>
-    <ng-template pTemplate="item" let-item let-root="root">
-        <a pRipple class="flex align-items-center p-menuitem-link" [routerLink]="item.routerLink">
-            <span [class]="item.icon"></span>
-            <span class="ml-2">{{ item.label }}</span>
-            <i *ngIf="item.items" [ngClass]="['pi', root ? 'pi-angle-down ml-2' : 'pi-angle-right ml-auto']"></i>
+            <ng-template class="w-full m-4 md:w-15rem" pTemplate="submenuheader" let-item>
+                <span class=" font-bold">{{ item.label }}</span>
+            </ng-template>
+            <ng-template pTemplate="item" let-item let-root="root">
+                <a pRipple class="flex align-items-center p-menuitem-link" [routerLink]="item.routerLink">
+                    <span [class]="item.icon"></span>
+                    <span class="ml-2">{{ item.label }}</span>
+                    <i *ngIf="item.items" [ngClass]="['pi', root ? 'pi-angle-down ml-2' : 'pi-angle-right ml-auto']"></i>
+        
+                </a>
+            </ng-template>
+        </p-menu>        
+    </div>
+    <div class="col" class="hidden xl:block">
+        <p-menu  [model]="items"  styleClass="w-full m-4 md:w-15rem">
 
-        </a>
-    </ng-template>
-</p-menu>
+            <ng-template class="w-full m-4 md:w-15rem" pTemplate="submenuheader" let-item>
+                <span class=" font-bold">{{ item.label }}</span>
+            </ng-template>
+            <ng-template pTemplate="item" let-item let-root="root">
+                <a pRipple class="flex align-items-center p-menuitem-link" [routerLink]="item.routerLink">
+                    <span [class]="item.icon"></span>
+                    <span class="ml-2">{{ item.label }}</span>
+                    <i *ngIf="item.items" [ngClass]="['pi', root ? 'pi-angle-down ml-2' : 'pi-angle-right ml-auto']"></i>
+        
+                </a>
+            </ng-template>
+        </p-menu>        
+    </div>
+</div>

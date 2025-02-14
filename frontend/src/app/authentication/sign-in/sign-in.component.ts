@@ -7,10 +7,11 @@ import { SessionService } from 'src/app/services/session.service';
 
 
 @Component({
-  selector: 'app-sign-in',
-  templateUrl: './sign-in.component.html',
-  styleUrls: ['./sign-in.component.scss'],
-  providers: [MessageService], 
+    selector: 'app-sign-in',
+    templateUrl: './sign-in.component.html',
+    styleUrls: ['./sign-in.component.scss'],
+    providers: [MessageService],
+    standalone: false
 })
 export class SignInComponent implements OnInit {
   signInForm: FormGroup;
@@ -56,11 +57,15 @@ export class SignInComponent implements OnInit {
       .signInWithEmailAndPassword(email, password)
       .then((token) => {
         this.showToast('success', 'Inicio de sesión exitoso.');
-        this.sessionService.saveDataSession(token);
+        this.sessionService.saveDataSession(token, email);
+        console.log(token);
         this.navigateToLogisticHome();
       })
       .catch((err) => {
         this.showToast('error', 'Error al iniciar sesión: ' + err.message);
+      })
+      .finally(()=>{
+        this.loading = false;
       });
   }
 
@@ -69,7 +74,6 @@ export class SignInComponent implements OnInit {
       .signInWithGoogle()
       .then((token) => {
         this.showToast('success', 'Inicio de sesión con Google con éxito.');
-        this.sessionService.saveDataSession(token);
         this.navigateToLogisticHome();
       })
       .catch((error) => {
@@ -95,7 +99,6 @@ export class SignInComponent implements OnInit {
       .signInWithFacebook()
       .then((token) => {
         this.showToast('success', 'Inicio de sesión con Facebook con éxito.');
-        this.sessionService.saveDataSession(token);
         this.navigateToLogisticHome();
       })
       .catch((error) => {

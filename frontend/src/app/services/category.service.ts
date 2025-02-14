@@ -15,7 +15,6 @@ export class CategoryService {
   });
   constructor(private http: HttpClient,private sessionService:SessionService) { }
 
-  // Método para obtener categorías
   getCategories(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl, {headers: this.headers});
   }

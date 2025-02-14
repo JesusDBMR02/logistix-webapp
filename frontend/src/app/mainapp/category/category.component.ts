@@ -1,14 +1,13 @@
-import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
 import { CategoryService } from 'src/app/services/category.service';
-import { SessionService } from 'src/app/services/session.service';
 
 @Component({
-  selector: 'app-category',
-  templateUrl: './category.component.html',
-  styleUrl: './category.component.scss'
+    selector: 'app-category',
+    templateUrl: './category.component.html',
+    styleUrl: './category.component.scss',
+    standalone: false
 })
 export class CategoryComponent implements OnInit {
   categories: any[] = [];
@@ -47,15 +46,15 @@ export class CategoryComponent implements OnInit {
   getCategories(){
     this.loading = true;
     this.categoryService.getCategories().subscribe({
-      next: (data) => {
-        console.log('Categorías:', data);
+      next: (data:any) => {
         this.categories = data;
+        console.log(this.categories)
         this.filteredCategories = data;
         this.loading = false;
         this.cdr.detectChanges(); 
       },
-      error: (err) => {
-        console.error('Error al cargar categorías:', err);
+      error: (error) => {
+        this.showToast('error','An error occurred'+ error);
       }
     });
   }
@@ -84,7 +83,7 @@ export class CategoryComponent implements OnInit {
         accept: () => {
           this.categoryService.updateCategory(id,this.createUptForm.value).subscribe({
             next: (response:any) => {
-              this.showToast('warn','The category updated successfully');
+              this.showToast('success','The category updated successfully');
               this.getCategories();
               this.createUptForm.reset();
               this.visibleUpt = false;
@@ -121,7 +120,7 @@ export class CategoryComponent implements OnInit {
     if(this.createUptForm.valid){
       this.categoryService.createCategory(this.createUptForm.value).subscribe({
         next: (response:any) => {
-          this.showToast('warn','New category added successfully');
+          this.showToast('success','New category added successfully');
           this.getCategories();
           this.createUptForm.reset();
           this.visible = false;

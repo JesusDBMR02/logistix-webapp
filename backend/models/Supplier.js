@@ -1,5 +1,5 @@
 class Supplier {
-    constructor(name, contact, phone, email, address = {}, supplierType = 'Wholesale', suppliedProducts, notes = '') {
+    constructor(name, contact, phone, email, address, supplierType,status, notes, suppliedProducts) {
         this.name = name;
         this.contact = contact;
         this.phone = phone;
@@ -13,7 +13,8 @@ class Supplier {
         };
         this.suppliedProducts = suppliedProducts;
         this.supplierType = supplierType;
-        this.notes = notes;
+        this.status = status;
+        this.notes = notes||'';
     }
 }
 

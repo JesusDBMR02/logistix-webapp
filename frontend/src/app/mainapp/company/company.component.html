@@ -1,0 +1,111 @@
+<div class="row">
+    <div *ngIf="loading" class="flex align-items-center spinner-overlay z-5">
+        <p-progressSpinner ariaLabel="loading" />
+    </div>
+    <div class="col-12">
+        <p-card styleClass="bg-cyan-100" header="Company">
+            <div class="row lg:flex">
+                <div class="col-12 lg:col-4">
+                    <p-card header="Profile" styleClass="bg-teal-200 shadow-2">
+                        <div class="row text-center">
+                            <img width="125px" class="border-circle" src="{{profile}}" alt="{{company}}">
+                            <h2>{{company}}</h2>
+                            <p>{{email}}</p>
+                        </div>
+                    </p-card>
+                </div>
+                <div class="col-12 md:col-8 mr-5">
+                    <form [formGroup]="uptForm" (ngSubmit)="updateCompany(id)">
+
+                    <div class="row flex">
+                        <div class="col-6 ">
+                            <div class="row">
+                                <div class="col">
+                                    <label class="block font-bold mb-2" for="name">
+                                        Name:
+                                     </label>
+                                     <input pInputText type="text" class="w-full mb-3" id="name" formControlName="name" placeholder="Name"/>
+                                     <label class="block font-bold mb-2" for="lastName">
+                                        Last Name:
+                                    </label>
+                                    <input pInputText type="text" class="w-full mb-3" id="lastName" formControlName="lastName" placeholder="Last Name"/>
+                                    <label class="block font-bold mb-2" for="email">
+                                        Email
+                                    </label>
+                                    <input pInputText type="text" class="w-full mb-3" id="email" formControlName="email" placeholder="Email" />
+                                </div> 
+                            </div>
+                            
+                           
+                        </div>
+                        <div class="col-6">
+                            <div class="row">
+                                <div class="col">
+                                    <label class="block font-bold mb-2" for="company">
+                                        Company
+                                    </label>
+                                    <input pInputText type="text" class="w-full mb-3" id="company" formControlName="company" placeholder="Company" />
+                                    <label class="block font-bold mb-2" for="phone">
+                                        Phone
+                                    </label>
+                                    <input pInputText type="text" class="w-full mb-3" id="phone" formControlName="phone" placeholder="Phone" />
+                                    <label class="block font-bold mb-2" for="address">
+                                        Address
+                                    </label>
+                                    <input pInputText type="text" class="w-full mb-3" id="address" formControlName="address"  placeholder="Address" />
+                                    <label class="block font-bold mb-2" for="role">
+                                        Role
+                                    </label>
+                                    <input pInputText type="text" class="w-full mb-3" id="role"  formControlName="role"  placeholder="Role"  />
+                                </div> 
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p-fileUpload #fileUpload mode="basic" name="file" accept="image/*" (onSelect)="onFileSelected($event)"
+                            chooseLabel="Choose Image" />
+                        </div>
+                            
+                    </div>
+                    <div class="row flex ">
+                        <div class="col text-right">
+                            <button pButton type="submit" class="p-button-warning" label="Edit" icon="pi pi-pencil" ></button>
+                        </div>
+                        
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </p-card>
+    </div>
+    <p-toast/>
+<p-confirmDialog #cd>
+    <ng-template pTemplate="headless" let-message>
+        <div class="flex flex-column align-items-center p-5 surface-overlay border-round">
+            <div class="border-circle bg-yellow-400 inline-flex justify-content-center align-items-center h-6rem w-6rem">
+                <i class="{{message.icon}} text-5xl "></i>
+            </div>
+            <span class="font-bold text-2xl block mb-2 mt-4">
+                {{ message.header }}
+            </span>
+            <p class="mb-0">{{ message.message }}</p>
+            <div class="flex align-items-center gap-2 mt-4">
+                <button 
+                    pButton 
+                    label="Accept" 
+                    (click)="cd.accept()" 
+                    class="w-8rem">
+                </button>
+                <button 
+                    pButton 
+                    label="Cancel" 
+                    (click)="cd.reject()" 
+                    class="p-button-outlined w-8rem ">
+                </button>
+            </div>
+        </div>
+    </ng-template>
+</p-confirmDialog>
+</div>

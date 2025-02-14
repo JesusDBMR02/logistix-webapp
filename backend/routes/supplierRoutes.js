@@ -3,9 +3,9 @@ const router = express.Router();
 const {
     setDb,
     getAllSuppliers,
+    getSupplierById,
     createSupplier,
     updateSupplier,
-    deleteSupplier
 } = require('../controllers/supplierController');
 const authMiddleware = require('../middleware/authMiddleware');
 
@@ -21,6 +21,8 @@ router.post('/',authMiddleware, createSupplier);
 
 router.put('/:id',authMiddleware, updateSupplier);
 
-router.delete('/:id',authMiddleware, deleteSupplier);
+router.get('/:id',authMiddleware, getSupplierById);
+
+//router.delete('/:id',authMiddleware, deleteSupplier);
 
 module.exports = router;

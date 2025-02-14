@@ -4,18 +4,19 @@
 @import "primeicons/primeicons.css";
 @import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
-@import "/node_modules/primeflex/primeflex.css";
+@import "primeflex/primeflex.css";
 
 /* Opcional: agrega estilos globales y otras configuraciones */
 html, body {
   height: 100%;
 }
 body {
-  margin: 0;
+  margin:0;
   background-image: url("../src/assets/istockphoto-1484852942-612x612.jpg");
   backdrop-filter: blur(10px);
   background-repeat: no-repeat;
   background-size: cover;
+  background-attachment: fixed;
 }
 .container{
   width: 1024px;
@@ -39,4 +40,49 @@ body {
   align-items: center; 
   z-index: 1000;
 }
+.w-80{
+  width: 80% !important;
+}
+.h-40rem{
+  height: 45rem !important;
+}
+.p-menu {
+  background-color: rgb(170, 246, 253)   !important;
+}
+
+.p-menu .p-submenu-header {
+  background-color: rgb(170, 246, 253)   !important;
+}
+
+.p-stepper{
+  background-color: rgb(170, 246, 253)   !important;
+}
+.p-stepper .p-stepper-nav{
+  background-color: rgb(170, 246, 253)   !important;
+}
+.p-stepper .p-stepper-header{
+  background-color: rgb(170, 246, 253)   !important;
+}
+.p-stepper .p-stepper-action{
+  background-color: rgb(170, 246, 253)   !important;
+}
+.p-stepper .p-stepper-panels{
+  background-color: rgb(170, 246, 253)   !important;
+}
+.p-dataview{
+  background-color: rgb(170, 246, 253)   !important;
+}
+.p-dataview-header{
+  background-color: rgb(170, 246, 253)   !important;
+}
+.p-dataview-content{
+  background-color: rgb(170, 246, 253)   !important;
+}
+.p-paginator{
+  background-color: rgb(170, 246, 253)   !important;
+} 
+.p-dropdown{
+  margin-bottom: 10px !important;
+}
+
 

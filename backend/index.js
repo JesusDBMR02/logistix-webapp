@@ -10,7 +10,11 @@ const supplierRoutes = require('./routes/supplierRoutes.js');
 const purchaseRoutes = require('./routes/purchaseRoutes.js');
 const saleRoutes = require('./routes/saleRoutes.js');
 
-dotenv.config();
+if (process.env.NODE_ENV === 'test') {
+  require('dotenv').config({ path: '.env.test' });
+} else {
+  require('dotenv').config();
+}
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -33,10 +37,14 @@ connectToMongoDB()
 
 
     // Iniciar el servidor
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
+    if (process.env.NODE_ENV !== 'test') {
+      // Solo inicias el servidor cuando no estás en un entorno de prueba
+      app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+      });
+    }
   })
   .catch(error => {
     console.error('Error al conectar a MongoDB:', error);
   });
+module.exports = app;

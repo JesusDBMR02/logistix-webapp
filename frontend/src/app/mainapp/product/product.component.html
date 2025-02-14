@@ -1,0 +1,383 @@
+<div class="row">
+    <div *ngIf="loading" class="flex align-items-center spinner-overlay z-5">
+        <p-progressSpinner ariaLabel="loading" />
+    </div>
+    <div class="col-12">
+        <p-card styleClass="bg-cyan-100" header="Products">
+            <div class="row mb-2 mx-2">
+                <p-dropdown [options]="sortStatus" [(ngModel)]="selectedStatus" class="mr-2 "
+                    (onChange)="onSortChange($event)" placeholder="Sort by status">
+                </p-dropdown>
+                <p-dropdown [options]="categoriesArray" [(ngModel)]="selectedCategory" class="mr-2"
+                    (onChange)="onSortChange($event)" placeholder="Sort by category">
+                </p-dropdown>
+                <p-dropdown [options]="brandsArray" [(ngModel)]="selectedBrand" class="mr-2"
+                    (onChange)="onSortChange($event)" placeholder="Sort by brand">
+                </p-dropdown>
+                <p-dropdown [options]="suppliersArray" [(ngModel)]="selectedSupplier" (onChange)="onSortChange($event)"
+                    placeholder="Sort by supplier">
+                </p-dropdown>
+                <button pButton icon="pi pi-times" class="p-button-danger mb-2" (click)="clearFilters()"></button>
+            </div>
+            <div class="h-40rem  overflow-y-scroll">
+                <p-dataView [value]="filteredProducts" [rows]="5" [paginator]="true" [sortField]="sortField"
+                    [sortOrder]="sortOrder">
+                    <ng-template pTemplate="header">
+                        <div>
+                            <button pButton type="button" icon="pi pi-plus" class="mr-2"
+                                (click)="showDialogCreate()"></button>
+                            <span class="p-input-icon-left ">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" placeholder="Search by name" [(ngModel)]="searchTerm"
+                                    (input)="filterProducts()" />
+                            </span>
+                        </div>
+                    </ng-template>
+                    <ng-template let-products pTemplate="list">
+                        <div *ngFor="let product of products;" class="p-dataview-list">
+                            <div
+                                class=" xl:flex p-3 mx-2 my-3 gap-4 border-round  bg-teal-200 shadow-2">
+                                <div>
+                                    <p-tag class="absolute" [severity]="
+                                        product.status === 'INSTOCK' ? 'success' : product.status==='LOWSTOCK' ? 'warning' : 'danger'
+                                        " [value]="product.status" />
+                                    <img class="block mx-auto border-round" width="150px" [src]="product.img"
+                                        [alt]="product.name" />
+                                </div>
+                                <div class="flex justify-content-center xl:justify-content-start flex-1 gap-6">
+                                    <div class=" mb-3 gap-2">
+                                        <div>
+                                            <div class=" font-medium mt-2 text-sm">
+                                                {{ product.category.name }} - {{ product.brand.name }}</div>
+                                            <span class="font-medium text-secondary text-lg">{{ product.name }}</span>
+                                            <div class="mt-3 w-9 shadow-2">
+                                                <p-inputGroup>
+                                                    <button pButton type="button" icon="pi pi-minus"
+                                                        class="m p-button-danger"
+                                                        (click)="removeStock(product._id)"></button>
+                                                    <input type="text" value="{{product.stock}} {{product.measuring}}"
+                                                        pInputText placeholder="Vote" disabled />
+                                                    <button (click)="addStock(product._id)" pButton type="button"
+                                                        icon="pi pi-plus" class=" m p-button-success"></button>
+                                                </p-inputGroup>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex mb-3 justify-content-center xl:justify-content-end align-items-end ap-6">
+                                    <div>
+                                        <div>
+                                            <span class="text-xl text-right font-semibold">Price: {{ product.salePrice |
+                                                currency: 'EUR' }}</span>
+                                        </div>
+                                        <div *ngIf="product.discount == 0 ? false : true">
+                                            <span class="text-red-500 font-semibold">Discount: {{ product.discount
+                                                }}%</span>
+                                        </div>
+                                        <div>
+                                            <span class="font-semibold">Tax: {{ product.tax }}%</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-xl  font-bold">Total: {{ product.total| currency: 'EUR'
+                                                }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex justify-content-between lg:align-items-end gap-2">
+
+                                    <button pButton type="button" icon="pi pi-eye"
+                                        class="p-button-rounded p-button-info"
+                                        (click)="showDialogView(product._id)"></button>
+                                    <button pButton type="button" icon="pi pi-pencil"
+                                        class="p-button-rounded p-button-warning"
+                                        (click)="showDialogUpdate(product._id)"></button>
+                                    <button pButton type="button" icon="pi pi-trash"
+                                        class="p-button-rounded p-button-danger"
+                                        (click)="deleteProduct(product._id)"></button>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="empty">
+                        <p>No products available</p>
+                    </ng-template>
+                </p-dataView>
+            </div>
+        </p-card>
+    </div>
+    <p-toast />
+    <p-confirmDialog #cd>
+        <ng-template pTemplate="headless" let-message>
+            <div class="flex flex-column align-items-center p-5 surface-overlay border-round">
+                <div
+                    class="border-circle bg-yellow-400 inline-flex justify-content-center align-items-center h-6rem w-6rem">
+                    <i class="{{ message.icon }} text-5xl "></i>
+                </div>
+                <span class="font-bold text-2xl block mb-2 mt-4">
+                    {{ message.header }}
+                </span>
+                <p class="mb-0">{{ message.message }}</p>
+                <div class="flex align-items-center gap-2 mt-4">
+                    <button pButton label="Accept" (click)="cd.accept()" class="w-8rem"></button>
+                    <button pButton label="Cancel" (click)="cd.reject()" class="p-button-outlined w-8rem"></button>
+                </div>
+            </div>
+        </ng-template>
+    </p-confirmDialog>
+    <p-dialog header="Create Product" [modal]="true" [(visible)]="visible" [style]="{ width: '55%' }">
+        <form [formGroup]="createUptForm" (ngSubmit)="createProduct()">
+            <span class="p-text-secondary block mb-3">Create a new product</span>
+            <div class="flex row">
+                <div class="col-4">
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2 text-md">
+                        <input pInputText formControlName="name" placeholder="Name" class="w-full" id="name" />
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <p-dropdown [options]="categoriesArray" [style]="{ width: '100%' }" formControlName="categoryId"
+                            class="w-full" placeholder="Category">
+                        </p-dropdown>
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <p-dropdown [options]="brandsArray" [style]="{ width: '100%' }" formControlName="brandId"
+                            class="w-full" placeholder="Brand">
+                        </p-dropdown>
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <p-dropdown [options]="suppliersArray" [style]="{ width: '100%' }" formControlName="supplierId"
+                            class="w-full" placeholder="Supplier">
+                        </p-dropdown>
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <textarea rows="5" cols="auto" [style]="{ width: '100%' }" pInputTextarea
+                            formControlName="description" placeholder="Description"></textarea>
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2 text-md">
+                        <input pInputText formControlName="measuring" placeholder="Measure" class="w-full" id="name" />
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2 text-md">
+                        <label class="block font-bold mb-2" for="purchase_price">
+                            Purchase Price
+                        </label>
+                        <p-inputNumber formControlName="purchasePrice" mode="currency" currency="EUR"
+                            inputId="purchase_price" />
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <label class="block font-bold mb-2" for="sale_price">
+                            Sale Price
+                        </label>
+                        <p-inputNumber formControlName="salePrice" mode="currency" currency="EUR"
+                            inputId="sale_price" />
+
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <label class="block font-bold mb-2" for="discount">
+                            Discount
+                        </label>
+                        <p-inputNumber formControlName="discount" inputId="discount" suffix="%" />
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <label class="block font-bold mb-2" for="tax">
+                            Tax
+                        </label>
+                        <p-inputNumber formControlName="tax" inputId="tax" suffix="%" />
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <label class="block font-bold mb-2" for="stock">
+                            Stock
+                        </label>
+                        <p-inputNumber formControlName="stock" inputId="stock" />
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <label class="block font-bold mb-2">Attributes</label>
+                        <div formArrayName="attributes">
+                            <div *ngFor="let attribute of attributes.controls; let i = index" [formGroupName]="i"
+                                class="mb-3">
+                                <div class="flex align-items-center gap-2">
+                                    <input pInputText formControlName="key" placeholder="Key" class="w-5" />
+                                    <input pInputText formControlName="value" placeholder="Value" class="w-5" />
+                                    <button pButton type="button" icon="pi pi-trash"
+                                        class="p-button-text p-button-danger" (click)="removeAttribute(i)"></button>
+                                </div>
+                            </div>
+                        </div>
+                        <button pButton type="button" label="Add Attribute" class="mt-2"
+                            (click)="addAttribute()"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-content-between gap-2 mb-2 ml-2">
+                <p-fileUpload #fileUpload mode="basic" name="file" accept="image/*" (onSelect)="onFileSelected($event)"
+                    chooseLabel="Choose Image" />
+            </div>
+            <div class="flex justify-content-between gap-2">
+                <p-button label="Cancel" severity="secondary" (click)="visible = false" />
+                <p-button label="Save" type="submit" />
+            </div>
+        </form>
+    </p-dialog>
+    <p-dialog header="Update Product" [modal]="true" [(visible)]="visibleUpt" [style]="{ width: '55%' }">
+        <form [formGroup]="createUptForm" (ngSubmit)="updateProduct(id)">
+            <span class="p-text-secondary block mb-3">Edit product</span>
+            <div class="flex row">
+                <div class="col-4">
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2 text-md">
+                        <input pInputText formControlName="name" placeholder="Name" class="w-full" id="name" />
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <p-dropdown [options]="categoriesArray" [style]="{ width: '100%' }" formControlName="categoryId"
+                            class="w-full" placeholder="Category">
+                        </p-dropdown>
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <p-dropdown [options]="brandsArray" [style]="{ width: '100%' }" formControlName="brandId"
+                            class="w-full" placeholder="Brand">
+                        </p-dropdown>
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <p-dropdown [options]="suppliersArray" [style]="{ width: '100%' }" formControlName="supplierId"
+                            class="w-full" placeholder="Supplier">
+                        </p-dropdown>
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <textarea rows="5" cols="auto" [style]="{ width: '100%' }" pInputTextarea
+                            formControlName="description" placeholder="Description"></textarea>
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2 text-md">
+                        <input pInputText formControlName="measuring" placeholder="Measure" class="w-full" id="name" />
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2 text-md">
+                        <label class="block font-bold mb-2" for="purchase_price">
+                            Purchase Price
+                        </label>
+                        <p-inputNumber formControlName="purchasePrice" mode="currency" currency="EUR"
+                            inputId="purchase_price" />
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <label class="block font-bold mb-2" for="sale_price">
+                            Sale Price
+                        </label>
+                        <p-inputNumber formControlName="salePrice" mode="currency" currency="EUR"
+                            inputId="sale_price" />
+
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <label class="block font-bold mb-2" for="discount">
+                            Discount
+                        </label>
+                        <p-inputNumber formControlName="discount" inputId="discount" suffix="%" />
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <label class="block font-bold mb-2" for="tax">
+                            Tax
+                        </label>
+                        <p-inputNumber formControlName="tax" inputId="tax" suffix="%" />
+                    </div>
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <label class="block font-bold mb-2" for="stock">
+                            Stock
+                        </label>
+                        <p-inputNumber formControlName="stock" inputId="stock" />
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                        <label class="block font-bold mb-2">Attributes</label>
+                        <div formArrayName="attributes">
+                            <div *ngFor="let attribute of attributes.controls; let i = index" [formGroupName]="i"
+                                class="mb-3">
+                                <div class="flex align-items-center gap-2">
+                                    <input pInputText formControlName="key" placeholder="Key" class="w-5" />
+                                    <input pInputText formControlName="value" placeholder="Value" class="w-5" />
+                                    <button pButton type="button" icon="pi pi-trash"
+                                        class="p-button-text p-button-danger" (click)="removeAttribute(i)"></button>
+                                </div>
+                            </div>
+                        </div>
+                        <button pButton type="button" label="Add Attribute" class="mt-2"
+                            (click)="addAttribute()"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-content-between gap-2 mb-2 ml-2">
+                <p-fileUpload #fileUpload mode="basic" name="file" accept="image/*" (onSelect)="onFileSelected($event)"
+                    chooseLabel="Choose Image" />
+            </div>
+            <div class="flex justify-content-between gap-2">
+                <p-button label="Cancel" severity="secondary" (click)="visibleUpt = false" />
+                <p-button label="Save" type="submit" />
+            </div>
+        </form>
+    </p-dialog>
+    <p-dialog header="View Product" [modal]="true" [(visible)]="visibleView" [style]="{ width: '55%' }">
+        <h2>{{ dataProduct?.name}}</h2>
+        <div class="flex row">
+            <div class="col-4">
+                <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                    <label class="block font-bold mb-2"></label>
+                    <div>
+                        <img class="block xl:block mx-auto border-round" width="150px" [src]="dataProduct?.img"
+                            [alt]="dataProduct?.name" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="font-medium text-surface-900 dark:text-surface-0 mt-2 text-md">
+                </div>
+                <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                    <p><strong>Category: </strong>{{ dataProduct?.category.name}}</p>
+                </div>
+                <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                    <p><strong>Brand: </strong>{{ dataProduct?.brand.name}}</p>
+                </div>
+                <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                    <p><strong>Supplier: </strong>{{ dataProduct?.supplier.name}}</p>
+                </div>
+                <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                    <p><strong>Description: </strong>{{ dataProduct?.description}}</p>
+                </div>
+                <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                    <p><strong>Stock: </strong>{{ dataProduct?.stock}} {{ dataProduct?.measuring}}<p-tag class="ml-2"
+                            [severity]="
+                        dataProduct?.status === 'INSTOCK' ? 'success' : dataProduct?.status==='LOWSTOCK' ? 'warning' : 'danger'
+                        " [value]="dataProduct?.status" /></p>
+                </div>
+                <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                    <div *ngFor="let attribute of dataProduct?.attributes; let i = index" class="mb-3">
+                        <div class="flex align-items-center gap-2">
+                            <span><strong>Attribute:</strong>{{attribute.key}} - {{attribute.value}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="font-medium text-surface-900 dark:text-surface-0 mt-2 text-md">
+                    <p><strong>Purchase Price: </strong>{{ dataProduct?.purchasePrice | currency:'EUR'}}</p>
+                </div>
+                <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                    <p><strong>Sale Price: </strong>{{ dataProduct?.salePrice | currency:'EUR'}}</p>
+
+                </div>
+                <div *ngIf="dataProduct?.discount == 0 ? false : true" class="font-medium mt-2">
+                    <p class="text-red-500"><strong>Discount: {{ dataProduct?.discount}}%</strong>
+                    </p>
+                </div>
+                <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                    <p><strong>Tax: </strong>{{ dataProduct?.tax}}%</p>
+                </div>
+                <div class="font-medium text-surface-900 dark:text-surface-0 mt-2">
+                    <span class="text-xl p-2 border-round bg-orange-200"><strong>Total: </strong>{{ dataProduct?.total |
+                        currency:'EUR'}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-content-between gap-2">
+            <p-button label="Cancel" severity="secondary" (click)="visibleView = false" />
+        </div>
+    </p-dialog>
+</div>

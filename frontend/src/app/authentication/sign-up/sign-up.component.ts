@@ -7,10 +7,11 @@ import { Router } from '@angular/router';
 import { User } from '../../models/user.model';
 
 @Component({
-  selector: 'app-sign-up',
-  templateUrl: './sign-up.component.html',
-  styleUrls: ['./sign-up.component.scss'],
-  providers: [MessageService, ConfirmationService]
+    selector: 'app-sign-up',
+    templateUrl: './sign-up.component.html',
+    styleUrls: ['./sign-up.component.scss'],
+    providers: [MessageService, ConfirmationService],
+    standalone: false
 })
 export class SignUpComponent implements OnInit {
   signUpForm: FormGroup;

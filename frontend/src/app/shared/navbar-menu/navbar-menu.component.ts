@@ -5,9 +5,10 @@ import { AuthService } from 'src/app/services/auth.service';
 import { SessionService } from 'src/app/services/session.service';
 
 @Component({
-  selector: 'app-navbar-menu',
-  templateUrl: './navbar-menu.component.html',
-  styleUrl: './navbar-menu.component.scss'
+    selector: 'app-navbar-menu',
+    templateUrl: './navbar-menu.component.html',
+    styleUrl: './navbar-menu.component.scss',
+    standalone: false
 })
 export class NavbarMenuComponent implements OnInit {
   items: MenuItem[] | undefined;
@@ -21,13 +22,14 @@ export class NavbarMenuComponent implements OnInit {
      
       {
         label: 'Company',
-        icon: 'pi pi-building'
+        icon: 'pi pi-building',
+        routerLink: 'company'
       },
 
-      {
-        label: 'Contact',
-        icon: 'pi pi-envelope',
-      },
+      //{
+      //  label: 'Contact',
+      //  icon: 'pi pi-envelope',
+      //},
       {
         label: 'Sign-Out',
         icon: 'pi pi-sign-out',
@@ -42,7 +44,7 @@ export class NavbarMenuComponent implements OnInit {
       this.authService
       .logout()
       .then((token) => {
-        this.showToast('success', 'Inicio de sesión con Google con éxito.');
+        this.showToast('success', 'Log out successfull.');
         this.sessionService.removeDataSession();
         this.navigateToLogin();
       })

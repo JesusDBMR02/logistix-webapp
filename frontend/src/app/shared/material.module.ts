@@ -18,6 +18,15 @@ import { TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { FileUploadModule } from 'primeng/fileupload';
+import {ScrollTopModule} from 'primeng/scrolltop';
+import { TagModule } from 'primeng/tag';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { CalendarModule } from 'primeng/calendar';
+import { PickListModule } from 'primeng/picklist';
+import { CarouselModule } from 'primeng/carousel';
 @NgModule({
   exports: [
     ToolbarModule,
@@ -34,11 +43,20 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
     ProgressSpinnerModule,
     MenubarModule,
     MenuModule,
+    InputGroupModule,
     DataViewModule,
+    InputGroupAddonModule,
     TableModule,
     DropdownModule,
     DialogModule,
-    InputTextareaModule
+    InputTextareaModule,
+    CalendarModule,
+    InputNumberModule,
+    FileUploadModule,
+    ScrollTopModule,
+    TagModule,
+    PickListModule,
+    CarouselModule
   ],
 })
 export class MaterialModule {}
