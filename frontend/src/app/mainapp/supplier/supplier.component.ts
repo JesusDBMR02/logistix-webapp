@@ -99,10 +99,12 @@ export class SupplierComponent implements OnInit {
           address: response.address
           
         });
-        console.log(response); // Agrega este log para inspeccionar la respuesta
-        response.suppliedProducts.map((product:any) =>{
-          this.products.push(product);
-        })
+        if(response.suppliedProducts) {
+          response.suppliedProducts.map((product:any) =>{
+            this.products.push(product);
+          })
+        }
+        
         this.products;
         this.id = response._id;
         this.status = response.status;
@@ -139,25 +141,6 @@ export class SupplierComponent implements OnInit {
     } else {
       this.showToast('warn', 'The form is invalid');
     }
-  }
-
-  deleteSupplier(id: string) {
-    this.confirmationService.confirm({
-      message: 'Are you sure you want to delete this supplier?',
-      header: 'Delete Confirmation',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.supplierService.deleteSupplier(id).subscribe({
-          next: () => {
-            this.showToast('success', 'Supplier deleted successfully');
-            this.getSuppliers();
-          },
-          error: (error: any) => {
-            this.showToast('error', 'An error occurred: ' + error);
-          }
-        });
-      }
-    });
   }
     
   createSupplier() {

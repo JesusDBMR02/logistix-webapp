@@ -26,6 +26,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { CalendarModule } from 'primeng/calendar';
 import { PickListModule } from 'primeng/picklist';
+import { CarouselModule } from 'primeng/carousel';
 @NgModule({
   exports: [
     ToolbarModule,
@@ -54,7 +55,8 @@ import { PickListModule } from 'primeng/picklist';
     FileUploadModule,
     ScrollTopModule,
     TagModule,
-    PickListModule
+    PickListModule,
+    CarouselModule
   ],
 })
 export class MaterialModule {}

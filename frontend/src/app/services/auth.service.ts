@@ -1,13 +1,18 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Router } from '@angular/router';
 import { FacebookAuthProvider, GoogleAuthProvider } from 'firebase/auth';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(public auth: AngularFireAuth) {
-   
+  constructor(public auth: AngularFireAuth, private router: Router) {
+    this.auth.authState.subscribe((user) => {
+      if (!user) {
+        this.router.navigate(['/sign-in']);
+      }
+    });
   }
   signInWithGoogle() {
     return this.auth.signInWithPopup(new GoogleAuthProvider()).then(async (result) => {
@@ -27,6 +32,8 @@ export class AuthService {
     return this.auth.signInWithEmailAndPassword(email, password).then(async (result) => {
       const token = await result.user?.getIdToken() ??"";
       return token;
+    }).catch((error)=>{
+      throw error; 
     });
   }
 

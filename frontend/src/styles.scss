@@ -40,8 +40,49 @@ body {
   align-items: center; 
   z-index: 1000;
 }
+.w-80{
+  width: 80% !important;
+}
 .h-40rem{
   height: 45rem !important;
+}
+.p-menu {
+  background-color: rgb(170, 246, 253)   !important;
+}
+
+.p-menu .p-submenu-header {
+  background-color: rgb(170, 246, 253)   !important;
+}
+
+.p-stepper{
+  background-color: rgb(170, 246, 253)   !important;
+}
+.p-stepper .p-stepper-nav{
+  background-color: rgb(170, 246, 253)   !important;
+}
+.p-stepper .p-stepper-header{
+  background-color: rgb(170, 246, 253)   !important;
+}
+.p-stepper .p-stepper-action{
+  background-color: rgb(170, 246, 253)   !important;
+}
+.p-stepper .p-stepper-panels{
+  background-color: rgb(170, 246, 253)   !important;
+}
+.p-dataview{
+  background-color: rgb(170, 246, 253)   !important;
+}
+.p-dataview-header{
+  background-color: rgb(170, 246, 253)   !important;
+}
+.p-dataview-content{
+  background-color: rgb(170, 246, 253)   !important;
+}
+.p-paginator{
+  background-color: rgb(170, 246, 253)   !important;
+} 
+.p-dropdown{
+  margin-bottom: 10px !important;
 }
 
 

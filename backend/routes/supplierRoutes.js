@@ -6,7 +6,6 @@ const {
     getSupplierById,
     createSupplier,
     updateSupplier,
-    deleteSupplier
 } = require('../controllers/supplierController');
 const authMiddleware = require('../middleware/authMiddleware');
 
@@ -24,6 +23,6 @@ router.put('/:id',authMiddleware, updateSupplier);
 
 router.get('/:id',authMiddleware, getSupplierById);
 
-router.delete('/:id',authMiddleware, deleteSupplier);
+//router.delete('/:id',authMiddleware, deleteSupplier);
 
 module.exports = router;

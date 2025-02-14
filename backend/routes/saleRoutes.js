@@ -6,7 +6,6 @@ const {
     getSaleById,
     createSale,
     updateSale,
-    deleteSale
 } = require('../controllers/saleController');
 const authMiddleware = require('../middleware/authMiddleware');
 
@@ -24,6 +23,6 @@ router.post('/',authMiddleware, createSale);
 
 router.put('/:id',authMiddleware, updateSale);
 
-router.delete('/:id',authMiddleware, deleteSale);
+//router.delete('/:id',authMiddleware, deleteSale);
 
 module.exports = router;

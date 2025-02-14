@@ -7,11 +7,11 @@ class Product {
       this.supplier = supplier; 
       this.purchasePrice = purchasePrice;
       this.salePrice = salePrice;
-      this.discount = discount; //No es necesario 
-      this.tax = tax; //No es necesario
+      this.discount = discount; 
+      this.tax = tax;
       this.stock = stock;
       this.measuring = measuring;
-      this.status = status; //No es necesario
+      this.status = status; 
       this.img = img;
       this.attributes = attributes;
       this.total= total;

@@ -13,6 +13,7 @@ import { SupplierComponent } from './mainapp/supplier/supplier.component';
 import { ProductComponent } from './mainapp/product/product.component';
 import { SaleComponent } from './mainapp/sale/sale.component';
 import { PurchaseComponent } from './mainapp/purchase/purchase.component';
+import { authGuard } from './guards/auth/auth.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: '/sign-in', pathMatch: 'full' },
@@ -20,7 +21,8 @@ const routes: Routes = [
   { path: 'sign-up', component: SignUpComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent},
   { path: 'confirm-email', component: ConfirmEmailComponent},
-  { path: "mainapp", component: MainappComponent,
+  
+  { path: "mainapp", component: MainappComponent,canActivate: [authGuard],
     children: [
     { path:'category', component: CategoryComponent},
     { path: 'home', component: HomeComponent },

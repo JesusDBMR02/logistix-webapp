@@ -19,12 +19,11 @@ const signUp = async (req, res) => {
     await db.insertOne(user);
     res.status(201).json({ message: 'Usuario registrado exitosamente.' });
   } catch (error) {
-    console.error('Error al registrar el usuario:', error);
     res.status(500).json({ message: 'Error al registrar el usuario.', error });
   }
 };
 
-const signIn = async (req, res) => {
+/*const signIn = async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -40,22 +39,20 @@ const signIn = async (req, res) => {
       res.status(401).json({ message: 'Contraseña incorrecta.' });
     }
   } catch (error) {
-    console.error('Error al iniciar sesión:', error);
     res.status(500).json({ message: 'Error al iniciar sesión.', error });
   }
 };
 
 const getUsers = async (req, res) => {
   try {
-      const user = await db.find().toArray();
+      const user = await db.find({userId: req.user.uid}).toArray();
       
 
       res.status(200).json(user);
   } catch (error) {
-      console.error(error);
       res.status(500).json({ message: 'Error al obtener el usuario.', error });
   }
-};
+};*/
 
 const getUserByEmail = async (req, res) => {
    try {
@@ -63,7 +60,6 @@ const getUserByEmail = async (req, res) => {
           const user = await db.findOne({ email:email })
           res.status(200).json(user);
       } catch (error) {
-          console.error(error);
           res.status(500).json({ message: 'Error al obtener el usuario', error });
       }
 };
@@ -84,10 +80,9 @@ const updateUser = async (req, res) => {
           const updatedUser = await db.findOne({ _id: new ObjectId(id) });
           res.json(updatedUser);
       } catch (error) {
-          console.error("Error al actualizar el usuario:", error);
           res.status(500).json({ message: "Error al actualizar el usuario", error });
       } 
 }
 
-module.exports = { setDb, signUp, signIn, getUsers,getUserByEmail, updateUser };
+module.exports = { setDb, signUp,getUserByEmail, updateUser };
 

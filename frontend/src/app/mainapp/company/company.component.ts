@@ -50,22 +50,24 @@ export class CompanyComponent implements OnInit{
     this.loading = true;
     this.userService.getUserByEmail().subscribe({
       next: (response) => {
+        console.log(response);
+
         this.uptForm.patchValue({
-          name: response[0].name,
-          lastName: response[0].lastName,
-          phone: response[0].phone,
-          email: response[0].email,
-          company: response[0].company,
-          role: response[0].role,
-          address: response[0].address
+          name: response.name,
+          lastName: response.lastName,
+          phone: response.phone,
+          email: response.email,
+          company: response.company,
+          role: response.role,
+          address: response.address
           
         });
         this.uptForm.get('email')?.disable();
         this.uptForm.get('role')?.disable();
-        this.id = response[0]._id;
-        this.email = response[0].email;
-        this.company = response[0].company;
-        this.profile = response[0].profile;
+        this.id = response._id;
+        this.email = response.email;
+        this.company = response.company;
+        this.profile = response.profile;
         this.loading = false;
          
       },

@@ -1,8 +1,10 @@
-<div class="container h-screen flex align-content-center justify-content-center">
+
     <div *ngIf="loading" class="flex align-items-center spinner-overlay z-5">
         <p-progressSpinner ariaLabel="loading" />
     </div>
-    <p-card header="Sign-Up" class="flex align-items-center" [style]="{ width: '500px' }">
+    <div class="row flex h-full w-full justify-content-center justify-content-end">
+        <div class="col-12 md:col-6 flex justify-content-center align-items-center">
+    <p-card header="Sign-Up" styleClass="bg-cyan-100" >
         <form class="sign-up-form" [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
             <p-stepper [linear]="true">
                 <p-stepperPanel header="Acount">
@@ -106,6 +108,8 @@
             </p-stepper>
         </form>
     </p-card>
+    </div>
+    </div>
     <p-toast />
     <p-confirmDialog #cd>
         <ng-template pTemplate="headless" let-message>
@@ -134,5 +138,4 @@
             </div>
         </ng-template>
     </p-confirmDialog>
-</div>
 

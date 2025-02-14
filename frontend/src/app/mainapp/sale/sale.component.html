@@ -3,14 +3,14 @@
         <p-progressSpinner ariaLabel="loading" />
     </div>
     <div class="col-12">
-        <p-card header="Sales">
+        <p-card styleClass="bg-cyan-100"header="Sales">
             <div class="row mb-2 mx-2">
-                <button pButton type="button" icon="pi pi-plus" class="p-button mr-2" (click)="showDialogCreate()">
+                <button pButton type="button" icon="pi pi-plus" class="p-button mb-2 mx-2" (click)="showDialogCreate()">
                 </button>
                 <p-dropdown [options]="statusArray"  [(ngModel)]="selectedStatus" (onChange)="onSortChange($event)" placeholder="Sort by status">
                 </p-dropdown>
                 
-                <button pButton icon="pi pi-times" class="p-button-danger ml-2" (click)="clearFilters()"></button>
+                <button pButton icon="pi pi-times" class="p-button-danger ml-2 mb-2" (click)="clearFilters()"></button>
 
                 <span class="p-input-icon-left ml-2">
                     <i class="pi pi-search"></i>
@@ -24,24 +24,24 @@
                     <ng-template let-sales pTemplate="list">
                         <div *ngFor="let sale of sales; let first = first" class="p-dataview-list">
                             <div
-                                class="flex flex-col sm:flex-row sm:items-center p-3 mx-2 my-3 gap-4 border-round  bg-cyan-200 shadow-2">
+                                class="lg:flex p-3 mx-2 my-3 gap-4 border-round  bg-teal-200 shadow-2">
                                 
-                                <div class="flex flex-col md:flex-row flex-1 gap-6">
-                                    <div class="flex flex-row md:flex-col gap-2">
+                                <div class="flex flex-1 gap-6">
+                                    <div class="flex gap-2">
                                         <div>
                                             <h2>{{ sale.name }}</h2>
-                                            <div class=" mb-2 text-surface-900 dark:text-surface-0 mt-2 text-sm">
+                                            <div class=" mb-2 mt-2 text-sm">
                                                 {{ sale.saleDate }}</div>
                                                 
                                         </div>
                                     </div>
                                 </div>
-                                <div class="flex flex-col md:flex-row align-items-center flex-1 gap-6">
-                                    <div class="flex flex-row md:flex-col justify-between items-start gap-2">
+                                <div class="flex align-items-center flex-1 gap-6">
+                                    <div class="flex gap-2">
                                         <div>
                                             <span class="font-semibold text-lg">Payment Method:{{ sale.paymentMethod }}</span>
                                             
-                                            <div class=" font-medium text-surface-900 dark:text-surface-0 mt-2 text-sm">
+                                            <div class=" font-medium mt-2 text-sm">
                                                 <p-tag (click)="showDialogUpdateStatus(sale._id)" [severity]="
                                                 sale.status === 'COMPLETED' ? 'success' : sale.status==='PENDING' ? 'warning' : 'danger'
                                                 " [value]="sale.status" />
@@ -49,22 +49,19 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="flex flex-col md:flex-row align-items-end text-right md:items-center flex-1 gap-6">
-                                    <div class="flex flex-row md:flex-col justify-between items-start gap-2">
+                                <div class="flex align-items-end text-right  flex-1 gap-6">
+                                    <div class="flex gap-2">
                                         <div>
                                             <h2>Total: {{sale.totalAmount | currency: 'EUR'}}</h2>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="flex align-items-end text-right">
+                                <div class="flex lg:align-items-end justify-content-between text-right">
                                     <button pButton type="button" icon="pi pi-file-pdf"
                                         class=" p-button-danger p-button-rounded mr-2" (click)="generatePDF(sale._id)">
                                     </button>
                                     <button pButton type="button" icon="pi pi-pencil"
                                         class=" p-button-warning p-button-rounded mr-2" (click)="showDialogUpdate(sale._id)">
-                                    </button>
-                                    <button pButton type="button" icon="pi pi-trash"
-                                        class="p-button-rounded p-button-danger" (click)="deleteBrand(sale._id)">
                                     </button>
                                 </div>
                             </div>

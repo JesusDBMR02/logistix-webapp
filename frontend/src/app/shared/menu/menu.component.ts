@@ -10,6 +10,7 @@ import { MenuItem } from 'primeng/api';
 export class MenuComponent {
   items: MenuItem[] | undefined;
   model: any[] = [];
+  menuVisible = false; // Estado del menú
 
   ngOnInit() {
     this.items = [
@@ -27,7 +28,7 @@ export class MenuComponent {
         label: 'Brands & Categories',
         items: [
           { label: 'Brands', icon: 'pi pi-bookmark', routerLink: 'brand' },
-          { label: 'Categories', icon: 'pi pi-bookmark-fill', routerLink: 'category' },
+          { label: 'Categories', icon: 'pi pi-tag', routerLink: 'category' },
         ]
       },
       { label: 'Suppliers',
@@ -44,5 +45,8 @@ export class MenuComponent {
 
     ];
     
+  }
+  toggleMenu() {
+    this.menuVisible = !this.menuVisible;
   }
 }
