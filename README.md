@@ -63,7 +63,6 @@ Welcome to LogistiX! The ultimate online solution for managing your company's in
 * [![Node.js][Node.js]][Node-url]
 * [![Angular][Angular.io]][Angular-url]
 * [![Typescript][Typescript]][Typescript-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
 * [![Firebase][Firebase]][Firebase-url]
 * [![PrimeNG][PrimeNg.org]][PrimeNg-url]
 * [![Jest][Jest.io]][Jest-url]
@@ -105,8 +104,13 @@ Welcome to LogistiX! The ultimate online solution for managing your company's in
    cd backend
    ```
 5. In your backend workspace build the app, start the development server, and view the source files with:
-6. ```sh
+   ```sh
    npm start
+   ```
+6.You can run backend test with:
+   ```sh
+   cd backend
+   npm test
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -154,7 +158,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Jesús- [![LinkedIn][linkedin-shield]][linkedin-url] - jesusredrojo@gmail.com
+Jesús Díaz-Bernardo Moreno de Redrojo - [![LinkedIn][linkedin-shield]][linkedin-url] - jesusredrojo@gmail.com
 
 Project Link: [https://github.com/your_username/repo_name](https://github.com/JesusDBMR02/logistix-webapp)
 
@@ -170,7 +174,7 @@ Project Link: [https://github.com/your_username/repo_name](https://github.com/Je
 [issues-url]: https://github.com/JesusDBMR02/logistix-webapp/issues
 [status-shield]:https://img.shields.io/badge/Status-production-green?style=for-the-badge
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]:www.linkedin.com/in/jesusdiazbernardo
+[linkedin-url]:https://www.linkedin.com/in/jesusdiazbernardo/
 [Node.js]: https://img.shields.io/badge/node.js-green?style=for-the-badge&logo=node.js&logoColor=white
 [Node-url]: https://nodejs.org/
 [Typescript]: https://img.shields.io/badge/Typescript-blue?style=for-the-badge&logo=typescript&logoColor=white
